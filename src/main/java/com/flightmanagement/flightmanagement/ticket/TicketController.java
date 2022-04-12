@@ -18,7 +18,7 @@ public class TicketController {
         return ticketService.getAll();
     }
 
-    @PostMapping("/{ticketCode}")
+    @GetMapping("/{ticketCode}")
     public Response findByCode(@PathVariable String ticketCode) {
         return ticketService.findByCode(ticketCode);
     }

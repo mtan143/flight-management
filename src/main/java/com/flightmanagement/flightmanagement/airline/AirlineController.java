@@ -16,7 +16,7 @@ public class AirlineController {
         return airlineService.getAll();
     }
 
-    @PostMapping("/{airlineCode}")
+    @GetMapping("/{airlineCode}")
     public Response findByCode(@PathVariable String airlineCode) {
         return airlineService.findByCode(airlineCode);
     }

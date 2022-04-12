@@ -17,7 +17,7 @@ public class PassengerController {
         return passengerService.getAll();
     }
 
-    @PostMapping("/{id}")
+    @GetMapping("/{id}")
     public Response findById(@PathVariable Integer id) {
         return passengerService.findById(id);
     }

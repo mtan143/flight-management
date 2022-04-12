@@ -23,7 +23,7 @@ public class FlightController {
         return flightService.getAll();
     }
 
-    @PostMapping("/{flightCode}")
+    @GetMapping("/{flightCode}")
     public Response findByCode(@PathVariable String flightCode) {
         return flightService.findByCode(flightCode);
     }
