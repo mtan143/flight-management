@@ -16,8 +16,8 @@ public class AirlineController {
         return airlineService.getAll();
     }
 
-    @GetMapping("/{airlineCode}")
-    public Response findByCode(@PathVariable String airlineCode) {
+    @GetMapping("/find")
+    public Response findByCode(@RequestParam String airlineCode) {
         return airlineService.findByCode(airlineCode);
     }
 

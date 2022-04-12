@@ -18,8 +18,8 @@ public class TicketController {
         return ticketService.getAll();
     }
 
-    @GetMapping("/{ticketCode}")
-    public Response findByCode(@PathVariable String ticketCode) {
+    @GetMapping("/find")
+    public Response findByCode(@RequestParam String ticketCode) {
         return ticketService.findByCode(ticketCode);
     }
 
@@ -48,8 +48,8 @@ public class TicketController {
         return ticketService.historyTransaction(email);
     }
 
-    @GetMapping("/flights/{flightCode}")
-    public Response getByFlightCode(@PathVariable String flightCode) {
+    @GetMapping("/flights")
+    public Response getByFlightCode(@RequestParam String flightCode) {
         return ticketService.getByFlightCode(flightCode);
     }
 }

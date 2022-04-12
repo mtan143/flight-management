@@ -23,8 +23,8 @@ public class FlightController {
         return flightService.getAll();
     }
 
-    @GetMapping("/{flightCode}")
-    public Response findByCode(@PathVariable String flightCode) {
+    @GetMapping("/find")
+    public Response findByCode(@RequestParam String flightCode) {
         return flightService.findByCode(flightCode);
     }
 
@@ -48,8 +48,8 @@ public class FlightController {
         return flightService.get(id);
     }
 
-    @GetMapping("/status/{flightCode}")
-    public Response findFlightStatus(@PathVariable String flightCode) {
+    @GetMapping("/status")
+    public Response findFlightStatus(@RequestParam String flightCode) {
         return flightService.findFlightStatus(flightCode);
     }
 
@@ -63,8 +63,8 @@ public class FlightController {
         return flightService.flightOfDayCounting(time);
     }*/
 
-    @GetMapping("/classTypes/{flightCode}")
-    public Response getClassTypeByFlightCode(@PathVariable String flightCode) {
+    @GetMapping("/classTypes")
+    public Response getClassTypeByFlightCode(@RequestParam String flightCode) {
         return classFlightService.findByFlightCode(flightCode);
     }
 }
