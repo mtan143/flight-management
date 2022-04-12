@@ -48,7 +48,7 @@ public class FlightController {
         return flightService.get(id);
     }
 
-    @GetMapping("/{flightCode}")
+    @GetMapping("/status/{flightCode}")
     public Response findFlightStatus(@PathVariable String flightCode) {
         return flightService.findFlightStatus(flightCode);
     }
