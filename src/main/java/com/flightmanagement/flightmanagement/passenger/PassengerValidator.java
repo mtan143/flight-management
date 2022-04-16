@@ -17,7 +17,7 @@ public class PassengerValidator {
             throw new BusinessException(PassengerError.PASSENGER_INVALID);
         }
 
-        if (passenger.getTicketCode().isEmpty()) {
+        if (passenger.getTicketId() < 0) {
             log.info("Execute this method got error due to empty ticket code");
             throw new BusinessException(PassengerError.TICKET_CODE_INVALID);
         }

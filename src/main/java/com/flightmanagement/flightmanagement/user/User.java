@@ -4,39 +4,41 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Table("tbUser")
 public class User {
 
     @Id
-    @SequenceGenerator(
-            name = "user_id_sequence",
-            sequenceName = "user_id_sequence"
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_id_sequence"
-    )
-    private Integer id;
-    private String firstName;
-    private String lastName;
-    private String phoneNumber;
-    private String email;
-    private LocalDateTime dateOfBirth;
-    private String address;
-    private String identifyNumber;
+    @Column("userId")
+    private Integer userId;
+
+    @Column("username")
     private String username;
+
+    @Column("password")
     private String password;
 
+
+
+
+    @Column("createdBy")
     private String createdBy;
-    private LocalDateTime createdDate;
+
+    @Column("createdDate")
+    private Date createdDate;
+
+    @Column("lastUpdateBy")
     private String lastUpdateBy;
-    private LocalDateTime lastUpdateDate;
+
+    @Column("lastUpdateDate")
+    private Date lastUpdateDate;
 }

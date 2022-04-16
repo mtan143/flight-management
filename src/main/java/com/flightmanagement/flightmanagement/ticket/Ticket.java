@@ -4,62 +4,69 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Table("tbl_Ticket")
 public class Ticket {
 
     @Id
-    @SequenceGenerator(
-            name = "ticket_id_sequence",
-            sequenceName = "ticket_id_sequence"
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "ticket_id_sequence"
-    )
-    private Integer id;
-    @Column(name = "ticketCode")
-    private String ticketCode;
-    @Column(name = "classFlightCode")
-    private String classFlightCode;
+    @Column("ticketId")
+    private Integer ticketId;
 
-    @Column(name = "firstName")
+    @Column("ticketCode")
+    private String ticketCode;
+
+    @Column("classFlightId")
+    private int classFlightId;
+
+    @Column("userId")
+    private Integer userId;
+
+    @Column("firstName")
     private String firstName;
-    @Column(name = "lastName")
+
+    @Column("lastName")
     private String lastName;
-    @Column(name = "phoneNumber")
+
+    @Column("phoneNumber")
     private String phoneNumber;
-    @Column(name = "email")
+
+    @Column("email")
     private String email;
-    @Column(name = "ticketStatus")
+
+    @Column("name")
     private TicketStatus ticketStatus;
-    @Column(name = "totalPrice")
+
+    @Column("name")
     private int totalPrice;
 
-    @Column(name = "status")
+    @Column("name")
     private Status status;
 
-    @Column(name = "couponCode")
-    private String couponCode;
-    @Column(name = "voucherCode")
+    @Column("name")
     private String voucherCode;
 
 
-    @Column(name = "createdBy")
+
+    @Column("createdBy")
     private String createdBy;
-    @Column(name = "createdDate")
-    private LocalDateTime createdDate;
-    @Column(name = "lastUpdateBy")
+
+    @Column("createdDate")
+    private Date createdDate;
+
+    @Column("lastUpdateBy")
     private String lastUpdateBy;
-    @Column(name = "lastUpdateDate")
-    private LocalDateTime lastUpdateDate;
+
+    @Column("lastUpdateDate")
+    private Date lastUpdateDate;
 
 }

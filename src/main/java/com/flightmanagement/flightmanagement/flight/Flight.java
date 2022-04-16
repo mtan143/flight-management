@@ -1,59 +1,69 @@
 package com.flightmanagement.flightmanagement.flight;
 
-import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightManage;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.Date;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Table("tbl_Flight")
 public class Flight {
 
     @Id
-    @SequenceGenerator(
-            name = "flight_id_sequence",
-            sequenceName = "flight_id_sequence"
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "flight_id_sequence"
-    )
-    private Integer id;
-    @Column(name = "flightCode")
+    @Column("flightId")
+    private Integer flightId;
+
+    @Column("flightCode")
     private String flightCode;
-    @Column(name = "name")
+
+    @Column("name")
     private String name;
-    @Column(name = "airlineCode")
-    private String airlineCode;
-    @Column(name = "flightStatus")
+
+    @Column("airlineId")
+    private int airlineId;
+
+    @Column("flightStatus")
     private FlightStatus flightStatus;
-    @Column(name = "departure")
-    private LocalDateTime departure;
-    @Column(name = "quantityTicket")
+
+    @Column("departure")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date departure;
+
+    @Column("quantityTicket")
     private int quantityTicket;
-    @Column(name = "departurePlace")
+
+    @Column("name")
     private String departurePlace;
-    @Column(name = "destination")
+
+    @Column("destination")
     private String destination;
-    @Column(name = "time")
+
+    @Column("time")
     private int time;
-    @Column(name = "gateId")
+
+    @Column("gateId")
     private String gateId;
 
-    @Column(name = "status")
+    @Column("status")
     private Status status;
 
-    @Column(name = "createdBy")
+
+    @Column("createdBy")
     private String createdBy;
-    @Column(name = "createdDate")
-    private LocalDateTime createdDate;
-    @Column(name = "lastUpdateBy")
+
+    @Column("createdDate")
+    private Date createdDate;
+
+    @Column("lastUpdateBy")
     private String lastUpdateBy;
-    @Column(name = "lastUpdateDate")
-    private LocalDateTime lastUpdateDate;
+
+    @Column("lastUpdateDate")
+    private Date lastUpdateDate;
 }

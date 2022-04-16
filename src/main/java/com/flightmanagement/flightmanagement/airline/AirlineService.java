@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -52,8 +54,8 @@ public class AirlineService {
         airline.setStatus(Status.ACTIVE);
         airline.setCreatedBy("SYSTEM");
         airline.setLastUpdateBy("SYSTEM");
-        airline.setCreatedDate(LocalDateTime.now());
-        airline.setLastUpdateDate(LocalDateTime.now());
+        airline.setCreatedDate(Date.from(Instant.now()));
+        airline.setLastUpdateDate(Date.from(Instant.now()));
 
         return Response.ok(airlineRepository.save(airline));
     }
@@ -80,7 +82,7 @@ public class AirlineService {
         existAirline.setName(airline.getName());
         existAirline.setFoundDate(airline.getFoundDate());
         existAirline.setLastUpdateBy("ADMIN");
-        existAirline.setLastUpdateDate(LocalDateTime.now());
+        existAirline.setLastUpdateDate(Date.from(Instant.now()));
 
         return Response.ok(this.save(existAirline));
     }
@@ -101,7 +103,7 @@ public class AirlineService {
 
         existingAirline.setStatus(Status.DISABLED);
         existingAirline.setLastUpdateBy("ADMIN");
-        existingAirline.setLastUpdateDate(LocalDateTime.now());
+        existingAirline.setLastUpdateDate(Date.from(Instant.now()));
 
         airlineRepository.save(existingAirline);
         return Response.ok("Deleted airline object: "

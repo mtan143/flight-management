@@ -1,8 +1,6 @@
 package com.flightmanagement.flightmanagement.ticket;
 
 import com.flightmanagement.flightmanagement.common.Response;
-import com.flightmanagement.flightmanagement.flight.Flight;
-import com.flightmanagement.flightmanagement.flight.ItemSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,13 +41,18 @@ public class TicketController {
         return ticketService.get(id);
     }
 
-    @GetMapping("/history")
-    public Response historyTransaction(@RequestBody String email) {
-        return ticketService.historyTransaction(email);
-    }
+//    @GetMapping("/history")
+//    public Response historyTransaction(@RequestBody String email) {
+//        return ticketService.historyTransaction(email);
+//    }
 
     @GetMapping("/flights")
     public Response getByFlightCode(@RequestParam String flightCode) {
         return ticketService.getByFlightCode(flightCode);
+    }
+
+    @GetMapping("/totalPrice/{userId}")
+    public Response getPriceTransaction(@PathVariable Integer userId) {
+        return ticketService.getPriceTransaction(userId);
     }
 }

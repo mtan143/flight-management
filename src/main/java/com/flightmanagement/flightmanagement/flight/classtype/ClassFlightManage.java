@@ -1,53 +1,58 @@
 package com.flightmanagement.flightmanagement.flight.classtype;
 
-import com.flightmanagement.flightmanagement.flight.Flight;
 import com.flightmanagement.flightmanagement.flight.Status;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Table("tbl_ClassType")
 public class ClassFlightManage {
 
     @Id
-    @SequenceGenerator(
-            name = "classtype_id_sequence",
-            sequenceName = "classtype_id_sequence"
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "classtype_id_sequence"
-    )
-    private Integer id;
-    @Column(name = "classFlightCode")
+    @Column("classFlightId")
+    private Integer classFlightId;
+
+    @Column("classFlightCode")
     private String classFlightCode;
-    @Column(name = "classType")
+
+    @Column("classType")
     private ClassType classType;
-    @Column(name = "price")
+
+    @Column("price")
     private int price;
 
-    @Column(name = "quantity")
+    @Column("quantity")
     private int quantity;
-    @Column(name = "remainingQuantity")
+
+    @Column("remainingQuantity")
     private int remainingQuantity;
 
-    @Column(name = "status")
-    private Status status;
-    @Column(name = "flightCode")
-    private String flightCode;
 
-    @Column(name = "createdBy")
+    @Column("status")
+    private Status status;
+
+    @Column("flightId")
+    private int flightId;
+
+
+    @Column("createdBy")
     private String createdBy;
-    @Column(name = "createdDate")
-    private LocalDateTime createdDate;
-    @Column(name = "lastUpdateBy")
+
+    @Column("createdDate")
+    private Date createdDate;
+
+    @Column("lastUpdateBy")
     private String lastUpdateBy;
-    @Column(name = "lastUpdateDate")
-    private LocalDateTime lastUpdateDate;
+
+    @Column("lastUpdateDate")
+    private Date lastUpdateDate;
 
 }

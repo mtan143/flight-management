@@ -1,21 +1,17 @@
 package com.flightmanagement.flightmanagement.ticket;
 
-import com.flightmanagement.flightmanagement.airline.AirlineError;
 import com.flightmanagement.flightmanagement.common.Response;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
-import com.flightmanagement.flightmanagement.flight.Flight;
-import com.flightmanagement.flightmanagement.flight.FlightError;
 import com.flightmanagement.flightmanagement.flight.FlightRepository;
-import com.flightmanagement.flightmanagement.flight.FlightValidator;
 import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 import static com.flightmanagement.flightmanagement.ticket.Status.ACTIVE;
 import static com.flightmanagement.flightmanagement.ticket.Status.DISABLED;
@@ -66,11 +62,14 @@ public class TicketService {
         ticket.setTicketStatus(TicketStatus.ORDERED);
         ticket.setCreatedBy("SYSTEM");
         ticket.setLastUpdateBy("SYSTEM");
-        ticket.setCreatedDate(LocalDateTime.now());
-        ticket.setLastUpdateDate(LocalDateTime.now());
+        ticket.setCreatedDate(Date.from(Instant.now()));
+        ticket.setLastUpdateDate(Date.from(Instant.now()));
         // Send price transaction to Profile App
+        if (ticket.getUserId() != null) {
+//            sendTransaction(String AppId, Integer userId, ticket.getTotalPrice())
+        }
         ticketRepository.save(ticket);
-        classFlightService.updateRemainingTicket(ticket.getClassFlightCode());
+        classFlightService.updateRemainingTicket(ticket.getClassFlightId());
 
         return Response.ok();
     }
@@ -95,16 +94,15 @@ public class TicketService {
 
         // setting new data for existing object
         existTicket.setTicketCode(ticket.getTicketCode());
-        existTicket.setClassFlightCode(ticket.getClassFlightCode());
+        existTicket.setClassFlightId(ticket.getClassFlightId());
         existTicket.setFirstName(ticket.getFirstName());
         existTicket.setLastName(ticket.getLastName());
         existTicket.setEmail(ticket.getEmail());
         existTicket.setPhoneNumber(ticket.getPhoneNumber());
-        existTicket.setCouponCode(ticket.getCouponCode());
         existTicket.setVoucherCode(ticket.getVoucherCode());
         existTicket.setTicketStatus(ticket.getTicketStatus());
         existTicket.setLastUpdateBy("ADMIN");
-        existTicket.setLastUpdateDate(LocalDateTime.now());
+        existTicket.setLastUpdateDate(Date.from(Instant.now()));
 
         return Response.ok(this.save(existTicket));
     }
@@ -124,7 +122,7 @@ public class TicketService {
 
         existingTicket.setStatus(DISABLED);
         existingTicket.setLastUpdateBy("ADMIN");
-        existingTicket.setLastUpdateDate(LocalDateTime.now());
+        existingTicket.setLastUpdateDate(Date.from(Instant.now()));
 
         ticketRepository.save(existingTicket);
         return Response.ok("Deleted ticket object: " + existingTicket.getTicketCode());
@@ -152,17 +150,17 @@ public class TicketService {
      * @param email
      * @return
      */
-    public Response historyTransaction(String email) {
-
-        List<Ticket> tickets = ticketRepository.historyTransaction(email);
-
-        tickets.stream().map(t ->
-                new HistoryTransaction(t.getId(), t.getCreatedDate(),
-                        t.getTicketCode(), t.getTotalPrice(), t.getTicketStatus(),
-                        flightRepository.getByTicketCode(t.getTicketCode()).getDeparturePlace(),
-                        flightRepository.getByTicketCode(t.getTicketCode()).getDestination()));
-        return Response.ok(tickets);
-    }
+//    public Response historyTransaction(String email) {
+//
+//        List<Ticket> tickets = ticketRepository.historyTransaction(email);
+//
+//        tickets.stream().map(t ->
+//                new Transaction(t.getTicketId(), t.getCreatedDate(),
+//                        t.getTicketCode(), t.getTotalPrice(), t.getTicketStatus(),
+//                        flightRepository.getByTicketCode(t.getTicketCode()).getDeparturePlace(),
+//                        flightRepository.getByTicketCode(t.getTicketCode()).getDestination()));
+//        return Response.ok(tickets);
+//    }
 
     /**
      * Get all ticket by flight code
@@ -172,5 +170,22 @@ public class TicketService {
     public Response getByFlightCode(String flightCode) {
         return Response.ok(ticketRepository.getByFlightCode(flightCode));
     }
+
+    /**
+     * Get total price of user's transaction to save coupon
+     * @param userId
+     * @return
+     */
+    public Response getPriceTransaction(Integer userId) {
+        return Response.ok(ticketRepository.getPriceTransaction(userId));
+    }
+
+//    public Response cancelTicket() {
+//
+//    }
+
+//    public Response refund() {
+//
+//    }
 
 }

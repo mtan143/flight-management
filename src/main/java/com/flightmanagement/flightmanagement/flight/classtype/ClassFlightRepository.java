@@ -1,23 +1,23 @@
 package com.flightmanagement.flightmanagement.flight.classtype;
 
-import com.flightmanagement.flightmanagement.flight.Flight;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ClassFlightRepository extends JpaRepository<ClassFlightManage, Integer> {
+public interface ClassFlightRepository extends CrudRepository<ClassFlightManage, Integer> {
 
-    @Query("select count(t.id) from Ticket t " +
-            "inner join ClassFlightManage c on t.classFlightCode=?1 " +
+    @Query("select count(*) from tbl_Ticket as t " +
+            "inner join tbl_ClassType as c on t.classFlightId=:classFlightId " +
             "where t.ticketStatus='ORDERED'")
-    int closedTicket(String classFlightCode);
+    int closedTicket(@Param("classFlightId") int classFlightId);
 
-    @Query("select c from ClassFlightManage c where c.classFlightCode=?1")
-    ClassFlightManage findByCode(String classFlightCode);
+    @Query("select * from tbl_ClassType as c where c.classFlightCode=:classFlightCode")
+    ClassFlightManage findByCode(@Param("classFlightCode") String classFlightCode);
 
-    @Query("select c from ClassFlightManage c where c.flightCode=?1")
-    List<ClassFlightManage> findByFlightCode(String flightCode);
+    @Query("select * from tbl_ClassType as c where c.flightId=:flightId")
+    List<ClassFlightManage> findByFlightId(@Param("flightId") int flightId);
 }

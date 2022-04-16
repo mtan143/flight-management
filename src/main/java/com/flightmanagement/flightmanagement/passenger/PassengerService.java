@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 import static com.flightmanagement.flightmanagement.passenger.Status.ACTIVE;
@@ -39,7 +41,7 @@ public class PassengerService {
     public Response findById(Integer id) {
         log.info("Execute find by Id method from Passenger Service");
 
-        Passenger result = passengerRepository.getById(id);
+        Passenger result = passengerRepository.findById(id).get();
 
         return result != null ? Response.ok(result)
                 : Response.failed(new BusinessException(PassengerError.PASSENGER_NOT_EXIST));
@@ -57,8 +59,8 @@ public class PassengerService {
         passenger.setStatus(ACTIVE);
         passenger.setCreatedBy("SYSTEM");
         passenger.setLastUpdateBy("SYSTEM");
-        passenger.setCreatedDate(LocalDateTime.now());
-        passenger.setLastUpdateDate(LocalDateTime.now());
+        passenger.setCreatedDate(Date.from(Instant.now()));
+        passenger.setLastUpdateDate(Date.from(Instant.now()));
 
         return Response.ok(passengerRepository.save(passenger));
     }
@@ -82,14 +84,14 @@ public class PassengerService {
         PassengerValidator.validate(passenger);
 
         // setting new data for existing object
-        existPassenger.setTicketCode(passenger.getTicketCode());
+        existPassenger.setTicketId(passenger.getTicketId());
         existPassenger.setAppellation(passenger.getAppellation());
         existPassenger.setFirstName(passenger.getFirstName());
         existPassenger.setLastName(passenger.getLastName());
         existPassenger.setDateOfBirth(passenger.getDateOfBirth());
         existPassenger.setNationality(passenger.getNationality());
         existPassenger.setLastUpdateBy("ADMIN");
-        existPassenger.setLastUpdateDate(LocalDateTime.now());
+        existPassenger.setLastUpdateDate(Date.from(Instant.now()));
 
         return Response.ok(this.save(existPassenger));
     }
@@ -109,7 +111,7 @@ public class PassengerService {
 
         existingPassenger.setStatus(DISABLED);
         existingPassenger.setLastUpdateBy("ADMIN");
-        existingPassenger.setLastUpdateDate(LocalDateTime.now());
+        existingPassenger.setLastUpdateDate(Date.from(Instant.now()));
 
         passengerRepository.save(existingPassenger);
         return Response.ok("Deleted passenger object: "

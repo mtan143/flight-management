@@ -3,11 +3,16 @@ package com.flightmanagement.flightmanagement.flight;
 import com.flightmanagement.flightmanagement.airline.AirlineError;
 import com.flightmanagement.flightmanagement.common.Response;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
+import com.flightmanagement.flightmanagement.flight.classtype.ClassType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,8 +57,8 @@ public class FlightService {
         flight.setStatus(Status.ACTIVE);
         flight.setCreatedBy("SYSTEM");
         flight.setLastUpdateBy("SYSTEM");
-        flight.setCreatedDate(LocalDateTime.now());
-        flight.setLastUpdateDate(LocalDateTime.now());
+        flight.setCreatedDate(Date.from(Instant.now()));
+        flight.setLastUpdateDate(Date.from(Instant.now()));
 
         return Response.ok(flightRepository.save(flight));
     }
@@ -79,7 +84,7 @@ public class FlightService {
         // setting new data for existing object
         existFlight.setName(flight.getName());
         existFlight.setFlightCode(flight.getFlightCode());
-        existFlight.setAirlineCode(flight.getAirlineCode());
+        existFlight.setAirlineId(flight.getAirlineId());
         existFlight.setFlightStatus(flight.getFlightStatus());
         existFlight.setDeparture(flight.getDeparture());
         existFlight.setQuantityTicket(flight.getQuantityTicket());
@@ -87,7 +92,7 @@ public class FlightService {
         existFlight.setDestination(flight.getDestination());
         existFlight.setGateId(flight.getGateId());
         existFlight.setLastUpdateBy("ADMIN");
-        existFlight.setLastUpdateDate(LocalDateTime.now());
+        existFlight.setLastUpdateDate(Date.from(Instant.now()));
 
         return Response.ok(this.save(existFlight));
     }
@@ -107,11 +112,11 @@ public class FlightService {
 
         existingFlight.setStatus(Status.DISABLED);
         existingFlight.setLastUpdateBy("ADMIN");
-        existingFlight.setLastUpdateDate(LocalDateTime.now());
+        existingFlight.setLastUpdateDate(Date.from(Instant.now()));
 
         flightRepository.save(existingFlight);
         return Response.ok("Deleted flight object: "
-                + existingFlight.getAirlineCode() + " " + existingFlight.getName());
+                + existingFlight.getAirlineId() + " " + existingFlight.getName());
     }
 
     /**
@@ -151,12 +156,14 @@ public class FlightService {
 
     /**
      * Search flight, can be multiple flight
-     * @param itemSearch
+     * @param
      * @return
      */
-    public Response searchFlight(ItemSearch itemSearch) {
+    public Response searchFlight(String departurePlace, String destination, int quantity,
+                                 ClassType classType, Date departure) {
 
-        List<Flight> flights = flightRepository.searchFlight(itemSearch);
+        List<Flight> flights = flightRepository.searchFlight(departurePlace, destination,
+                quantity, classType, departure);
 
         return flights.isEmpty() ? Response.failed(new BusinessException(FlightError.FLIGHT_NOT_FOUND))
                 : Response.ok(flights);

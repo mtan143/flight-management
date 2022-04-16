@@ -21,9 +21,9 @@ public class FlightValidator {
             throw new BusinessException(FlightError.FLIGHT_CODE_EMPTY);
         }
 
-        if (flight.getAirlineCode().isEmpty()) {
-            log.info("Execute this method got error due to empty airline code");
-            throw new BusinessException(FlightError.AIRLINE_CODE_EMPTY);
+        if (flight.getAirlineId() < 0) {
+            log.info("Execute this method got error due to empty airline id");
+            throw new BusinessException(FlightError.AIRLINE_ID_EMPTY);
         }
 
         if (flight.getGateId().isEmpty()) {
