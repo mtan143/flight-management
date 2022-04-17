@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @RestController
 @RequestMapping("/customers/flights")
+@CrossOrigin
 public class FlightController {
 
     @Autowired
@@ -73,4 +73,5 @@ public class FlightController {
     public Response getClassTypeByFlightCode(@RequestParam int flightId) {
         return classFlightService.findByFlightCode(flightId);
     }
+
 }

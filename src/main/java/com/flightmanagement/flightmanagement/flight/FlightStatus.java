@@ -1,5 +1,5 @@
 package com.flightmanagement.flightmanagement.flight;
 
 public enum FlightStatus {
-    DELAY, TAKEOFF, LANDING, ARRIVED, LATE_ARRIVED, CANCEL
+    DELAY, TAKEOFF, LANDING, ARRIVED, LATE_ARRIVED, CANCEL, Dang_Bay
 }
