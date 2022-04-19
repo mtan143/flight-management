@@ -1,14 +1,10 @@
 package com.flightmanagement.flightmanagement.flight;
 
-import com.flightmanagement.flightmanagement.airline.Airline;
 import com.flightmanagement.flightmanagement.common.Response;
 import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightService;
-import com.flightmanagement.flightmanagement.flight.classtype.ClassType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 
 @RestController
 @RequestMapping("/customers/flights")
@@ -56,12 +52,17 @@ public class FlightController {
         return flightService.findFlightStatus(flightCode);
     }
 
+//    @GetMapping("/search")
+//    public Response searchFlight(@RequestParam String departurePlace, @RequestParam String destination,
+//                                 @RequestParam int quantity,
+//                                 @RequestParam ClassType classType, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date departure) {
+//        return flightService.searchFlight(departurePlace, destination,
+//                quantity, classType, departure);
+//    }
     @GetMapping("/search")
-    public Response searchFlight(@RequestParam String departurePlace, @RequestParam String destination,
-                                 @RequestParam int quantity,
-                                 @RequestParam ClassType classType, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date departure) {
-        return flightService.searchFlight(departurePlace, destination,
-                quantity, classType, departure);
+    public Response searchFlight(@RequestBody SearchItem searchItem) {
+        return flightService.searchFlight(searchItem.getDeparturePlace(), searchItem.getDestination(),
+                searchItem.getQuantity(), searchItem.getClassType(), searchItem.getDeparture());
     }
 
     /*@GetMapping("/count")
@@ -72,6 +73,11 @@ public class FlightController {
     @GetMapping("/classTypes")
     public Response getClassTypeByFlightCode(@RequestParam int flightId) {
         return classFlightService.findByFlightCode(flightId);
+    }
+
+    @PostMapping("/create/{airlineId}")
+    public Response create(@RequestBody FlightItem flightItem, @PathVariable int airlineId) {
+        return flightService.create(flightItem, airlineId);
     }
 
 }

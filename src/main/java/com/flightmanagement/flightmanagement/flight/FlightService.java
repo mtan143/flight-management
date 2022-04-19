@@ -1,20 +1,20 @@
 package com.flightmanagement.flightmanagement.flight;
 
-import com.flightmanagement.flightmanagement.airline.AirlineError;
 import com.flightmanagement.flightmanagement.common.Response;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
+import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightManage;
+import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightRepository;
+import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightValidator;
 import com.flightmanagement.flightmanagement.flight.classtype.ClassType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 @Service
 @Slf4j
@@ -22,6 +22,9 @@ public class FlightService {
 
     @Autowired
     private FlightRepository flightRepository;
+
+    @Autowired
+    private ClassFlightRepository classFlightRepository;
 
     /**
      * Get all flight data from database
@@ -176,5 +179,52 @@ public class FlightService {
     /*public Response flightOfDayCounting(LocalDateTime time) {
         return Response.ok(flightRepository.flightOfDayCounting(time));
     }*/
+
+    /**
+     * Create new flight transaction
+     */
+    public Response create(FlightItem flightItem, int airlineId) {
+
+        Flight flight = new Flight(new Random().nextInt(1000), flightItem.getFlightCode(),
+                flightItem.getName(), airlineId, FlightStatus.Khoi_Tao, flightItem.getDeparture(),
+                flightItem.getPtQuantity() + flightItem.getPt_dbQuantity() + flightItem.getTgQuantity() +
+                        flightItem.getHnQuantity(), flightItem.getDeparturePlace(), flightItem.getDestination(),
+                flightItem.getTime(), flightItem.getGateId(), Status.ACTIVE, "ADMIN", Date.from(Instant.now()), "ADMIN",
+                Date.from(Instant.now()));
+
+        ClassFlightManage pt = new ClassFlightManage(new Random().nextInt(10000), flightItem.getPtCode(),
+                ClassType.PHO_THONG, flightItem.getPtPrice(), flightItem.getPtQuantity(), flightItem.getPtQuantity(), Status.ACTIVE,
+                flightItem.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
+                Date.from(Instant.now()));
+
+        ClassFlightManage pt_db = new ClassFlightManage(new Random().nextInt(10000), flightItem.getPt_dbCode(),
+                ClassType.PHO_THONG_DAC_BIET, flightItem.getPt_dbPrice(), flightItem.getPt_dbQuantity(), flightItem.getPt_dbQuantity(), Status.ACTIVE,
+                flightItem.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
+                Date.from(Instant.now()));
+
+        ClassFlightManage tg = new ClassFlightManage(new Random().nextInt(10000), flightItem.getTgCode(),
+                ClassType.THUONG_GIA, flightItem.getTgPrice(), flightItem.getTgQuantity(), flightItem.getTgQuantity(), Status.ACTIVE,
+                flightItem.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
+                Date.from(Instant.now()));
+
+        ClassFlightManage hn = new ClassFlightManage(new Random().nextInt(10000), flightItem.getHnCode(),
+                ClassType.HANG_NHAT, flightItem.getHnPrice(), flightItem.getHnQuantity(), flightItem.getHnQuantity(), Status.ACTIVE,
+                flightItem.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
+                Date.from(Instant.now()));
+
+        FlightValidator.validate(flight);
+        ClassFlightValidator.validate(pt);
+        ClassFlightValidator.validate(pt_db);
+        ClassFlightValidator.validate(tg);
+        ClassFlightValidator.validate(hn);
+
+        flightRepository.save(flight);
+        classFlightRepository.save(pt);
+        classFlightRepository.save(pt_db);
+        classFlightRepository.save(tg);
+        classFlightRepository.save(hn);
+
+        return Response.ok(flightItem);
+    }
 
 }

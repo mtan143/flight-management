@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public interface FlightRepository extends CrudRepository<Flight, Integer> {
                               @Param("destination") String destination,
                               @Param("quantity") int quantity,
                               @Param("classType") ClassType classType,
-                              @Param("departure") Date departure);
+                              @Param("departure") @DateTimeFormat(pattern = "yyyy-MM-dd") Date departure);
 
     @Query("select * from tbl_Flight as f " +
             "inner join tbl_ClassType as c on c.flightCode=f.flightCode " +
