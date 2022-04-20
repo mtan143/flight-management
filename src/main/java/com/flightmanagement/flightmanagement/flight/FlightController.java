@@ -5,6 +5,8 @@ import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightService
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+
 
 @RestController
 @RequestMapping("/customers/flights")
@@ -62,7 +64,7 @@ public class FlightController {
     @GetMapping("/search")
     public Response searchFlight(@RequestBody SearchItem searchItem) {
         return flightService.searchFlight(searchItem.getDeparturePlace(), searchItem.getDestination(),
-                searchItem.getQuantity(), searchItem.getClassType(), searchItem.getDeparture());
+                searchItem.getQuantity(), searchItem.getClassType(), new SimpleDateFormat("yyyy-MM-dd").format(searchItem.getDeparture()));
     }
 
     /*@GetMapping("/count")

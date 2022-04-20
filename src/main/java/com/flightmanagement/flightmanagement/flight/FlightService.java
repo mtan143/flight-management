@@ -163,8 +163,8 @@ public class FlightService {
      * @return
      */
     public Response searchFlight(String departurePlace, String destination, int quantity,
-                                 ClassType classType, Date departure) {
-
+                                 ClassType classType, String departure) {
+        System.out.println(departure);
         List<Flight> flights = flightRepository.searchFlight(departurePlace, destination,
                 quantity, classType, departure);
 

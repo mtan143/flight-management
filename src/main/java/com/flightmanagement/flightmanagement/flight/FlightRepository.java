@@ -18,18 +18,19 @@ public interface FlightRepository extends CrudRepository<Flight, Integer> {
     @Query("select a.flightStatus from tbl_Flight as a where a.flightCode=:flightCode")
     FlightStatus findFlightStatus(@Param("flightCode") String flightCode);
 
-@Query("select * from tbl_Flight as a " +
+@Query("select a.flightId,  a.flightCode, a.name, a.airlineId, a.flightStatus, a.departure, a.quantityTicket, a.departurePlace, a.destination, a.[time], a.gateId, a.[status], a.createdBy, a.lastUpdateBy, a.createdDate, a.lastUpdateDate " +
+        "from tbl_Flight as a " +
         "inner join tbl_ClassType as c on a.flightId=c.flightId " +
         "where a.departurePlace=:departurePlace " +
-        "and a.destination=:destination " +
-        "and c.classType=:classType " +
-        "and c.remainingQuantity>:quantity " +
-        "and a.departure=:departure")
+        "or a.destination=:destination " +
+        "or c.classType=:classType " +
+        "or c.remainingQuantity>:quantity " +
+        "or a.departure=:departure")
     List<Flight> searchFlight(@Param("departurePlace") String departurePlace,
                               @Param("destination") String destination,
                               @Param("quantity") int quantity,
                               @Param("classType") ClassType classType,
-                              @Param("departure") @DateTimeFormat(pattern = "yyyy-MM-dd") Date departure);
+                              @Param("departure") String departure);
 
     @Query("select * from tbl_Flight as f " +
             "inner join tbl_ClassType as c on c.flightCode=f.flightCode " +
