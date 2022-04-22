@@ -1,5 +1,5 @@
 package com.flightmanagement.flightmanagement.ticket;
 
 public enum TicketStatus {
-    OPEN, ORDERED, USED, CLOSED
+    Tao, Da_Dat, Da_Dung
 }

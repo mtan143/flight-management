@@ -5,6 +5,7 @@ import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightService
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 
@@ -61,7 +62,7 @@ public class FlightController {
 //        return flightService.searchFlight(departurePlace, destination,
 //                quantity, classType, departure);
 //    }
-    @GetMapping("/search")
+    @PostMapping("/search")
     public Response searchFlight(@RequestBody SearchItem searchItem) {
         return flightService.searchFlight(searchItem.getDeparturePlace(), searchItem.getDestination(),
                 searchItem.getQuantity(), searchItem.getClassType(), new SimpleDateFormat("yyyy-MM-dd").format(searchItem.getDeparture()));
@@ -77,9 +78,16 @@ public class FlightController {
         return classFlightService.findByFlightCode(flightId);
     }
 
-    @PostMapping("/create/{airlineId}")
-    public Response create(@RequestBody FlightItem flightItem, @PathVariable int airlineId) {
-        return flightService.create(flightItem, airlineId);
+    @PostMapping("/create")
+    public Response create(@RequestBody FlightItem flightItem) throws ParseException {
+        System.out.println(flightItem);
+        return flightService.create(flightItem.getFlightId(), flightItem.getFlightCode(), flightItem.getName(),
+                flightItem.getAirlineId(), flightItem.getFlightStatus(), new SimpleDateFormat("yyyy-MM-dd").format(flightItem.getDeparture()), flightItem.getDeparturePlace(),
+                flightItem.getDestination(), flightItem.getTime(), flightItem.getGateId(), flightItem.getPtId(), flightItem.getPtCode(),
+                flightItem.getPtPrice(), flightItem.getPtQuantity(), flightItem.getPt_dbId(), flightItem.getPt_dbCode(),
+                flightItem.getPt_dbPrice(), flightItem.getPt_dbQuantity(), flightItem.getTgId(), flightItem.getTgCode(),
+                flightItem.getTgPrice(), flightItem.getTgQuantity(), flightItem.getHnId(), flightItem.getHnCode(), flightItem.getHnPrice(),
+                flightItem.getHnQuantity());
     }
 
 }

@@ -3,7 +3,6 @@ import com.flightmanagement.flightmanagement.flight.classtype.ClassType;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -12,7 +11,7 @@ import java.util.List;
 @Repository
 public interface FlightRepository extends CrudRepository<Flight, Integer> {
 
-    @Query("select a from tbl_Flight as a where a.flightCode=:flightCode")
+    @Query("select * from tbl_Flight as a where a.flightCode=:flightCode")
     Flight findBy(@Param("flightCode") String flightCode);
 
     @Query("select a.flightStatus from tbl_Flight as a where a.flightCode=:flightCode")

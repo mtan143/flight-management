@@ -1,8 +1,11 @@
 package com.flightmanagement.flightmanagement.flight.classtype;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flightmanagement.flightmanagement.flight.Status;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -14,7 +17,24 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("tbl_ClassType")
-public class ClassFlightManage {
+public class ClassFlightManage implements Persistable {
+
+    public ClassFlightManage(Integer classFlightId, String classFlightCode, ClassType classType,
+                             int price, int quantity, int remainingQuantity, Status status, int flightId,
+                             String createdBy, Date createdDate, String lastUpdateBy, Date lastUpdateDate) {
+        this.classFlightId = classFlightId;
+        this.classFlightCode = classFlightCode;
+        this.classType = classType;
+        this.price = price;
+        this.quantity = quantity;
+        this.remainingQuantity = remainingQuantity;
+        this.status = status;
+        this.flightId = flightId;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
+        this.lastUpdateBy = lastUpdateBy;
+        this.lastUpdateDate = lastUpdateDate;
+    }
 
     @Id
     @Column("classFlightId")
@@ -54,5 +74,24 @@ public class ClassFlightManage {
 
     @Column("lastUpdateDate")
     private Date lastUpdateDate;
+
+    @Transient
+    @JsonIgnore
+    private boolean newEntity;
+
+    @Override
+    public Object getId() {
+        return classFlightId;
+    }
+
+    public void setNew(boolean newInstance) {
+        this.newEntity = newInstance;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isNew() {
+        return newEntity;
+    }
 
 }

@@ -59,7 +59,7 @@ public class TicketService {
 
         TicketValidator.validate(ticket);
         ticket.setStatus(ACTIVE);
-        ticket.setTicketStatus(TicketStatus.ORDERED);
+        ticket.setTicketStatus(TicketStatus.Da_Dat);
         ticket.setCreatedBy("SYSTEM");
         ticket.setLastUpdateBy("SYSTEM");
         ticket.setCreatedDate(Date.from(Instant.now()));

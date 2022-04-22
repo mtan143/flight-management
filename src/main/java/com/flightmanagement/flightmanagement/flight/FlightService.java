@@ -2,15 +2,15 @@ package com.flightmanagement.flightmanagement.flight;
 
 import com.flightmanagement.flightmanagement.common.Response;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
-import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightManage;
-import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightRepository;
-import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightValidator;
-import com.flightmanagement.flightmanagement.flight.classtype.ClassType;
+import com.flightmanagement.flightmanagement.flight.classtype.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -183,48 +183,64 @@ public class FlightService {
     /**
      * Create new flight transaction
      */
-    public Response create(FlightItem flightItem, int airlineId) {
+    public Response create(Integer flightId, String flightCode, String name, int airlineId, FlightStatus flightStatus,
+            String departure, String departurePlace, String destination, int time, String gateId, Integer ptId,
+            String ptCode, int ptPrice, int ptQuantity, Integer pt_dbId, String pt_dbCode, int pt_dbPrice, int pt_dbQuantity,
+                           Integer tgId, String tgCode, int tgPrice, int tgQuantity, Integer hnId, String hnCode, int hnPrice,
+            int hnQuantity) throws ParseException {
 
-        Flight flight = new Flight(new Random().nextInt(1000), flightItem.getFlightCode(),
-                flightItem.getName(), airlineId, FlightStatus.Khoi_Tao, flightItem.getDeparture(),
-                flightItem.getPtQuantity() + flightItem.getPt_dbQuantity() + flightItem.getTgQuantity() +
-                        flightItem.getHnQuantity(), flightItem.getDeparturePlace(), flightItem.getDestination(),
-                flightItem.getTime(), flightItem.getGateId(), Status.ACTIVE, "ADMIN", Date.from(Instant.now()), "ADMIN",
+        Flight flight = new Flight(flightId, flightCode, name, airlineId, FlightStatus.Khoi_Tao,
+                new SimpleDateFormat("yyyy-MM-dd").parse(departure),
+                ptQuantity + pt_dbQuantity + tgQuantity + hnQuantity,
+                departurePlace, destination,
+                time, gateId, Status.ACTIVE, "ADMIN", Date.from(Instant.now()),
+                "ADMIN", Date.from(Instant.now()));
+
+        ClassFlightManage ptClass = new ClassFlightManage(ptId ,ptCode,
+                ClassType.PHO_THONG, ptPrice, ptQuantity, ptQuantity, Status.ACTIVE,
+                flightId, "ADMIN", Date.from(Instant.now()), "ADMIN",
                 Date.from(Instant.now()));
 
-        ClassFlightManage pt = new ClassFlightManage(new Random().nextInt(10000), flightItem.getPtCode(),
-                ClassType.PHO_THONG, flightItem.getPtPrice(), flightItem.getPtQuantity(), flightItem.getPtQuantity(), Status.ACTIVE,
-                flightItem.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
+        ClassFlightManage pt_dbClass = new ClassFlightManage(pt_dbId, pt_dbCode,
+                ClassType.PHO_THONG_DAC_BIET, pt_dbPrice, pt_dbQuantity, pt_dbQuantity, Status.ACTIVE,
+                flightId, "ADMIN", Date.from(Instant.now()), "ADMIN",
                 Date.from(Instant.now()));
 
-        ClassFlightManage pt_db = new ClassFlightManage(new Random().nextInt(10000), flightItem.getPt_dbCode(),
-                ClassType.PHO_THONG_DAC_BIET, flightItem.getPt_dbPrice(), flightItem.getPt_dbQuantity(), flightItem.getPt_dbQuantity(), Status.ACTIVE,
-                flightItem.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
+        ClassFlightManage tgClass = new ClassFlightManage(tgId, tgCode,
+                ClassType.THUONG_GIA, tgPrice, tgQuantity, tgQuantity, Status.ACTIVE,
+                flightId, "ADMIN", Date.from(Instant.now()), "ADMIN",
                 Date.from(Instant.now()));
 
-        ClassFlightManage tg = new ClassFlightManage(new Random().nextInt(10000), flightItem.getTgCode(),
-                ClassType.THUONG_GIA, flightItem.getTgPrice(), flightItem.getTgQuantity(), flightItem.getTgQuantity(), Status.ACTIVE,
-                flightItem.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
-                Date.from(Instant.now()));
-
-        ClassFlightManage hn = new ClassFlightManage(new Random().nextInt(10000), flightItem.getHnCode(),
-                ClassType.HANG_NHAT, flightItem.getHnPrice(), flightItem.getHnQuantity(), flightItem.getHnQuantity(), Status.ACTIVE,
-                flightItem.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
+        ClassFlightManage hnClass = new ClassFlightManage(hnId, hnCode,
+                ClassType.HANG_NHAT, hnPrice, hnQuantity, hnQuantity, Status.ACTIVE,
+                flightId, "ADMIN", Date.from(Instant.now()), "ADMIN",
                 Date.from(Instant.now()));
 
         FlightValidator.validate(flight);
-        ClassFlightValidator.validate(pt);
-        ClassFlightValidator.validate(pt_db);
-        ClassFlightValidator.validate(tg);
-        ClassFlightValidator.validate(hn);
+        ClassFlightValidator.validate(ptClass);
+        ClassFlightValidator.validate(pt_dbClass);
+        ClassFlightValidator.validate(tgClass);
+        ClassFlightValidator.validate(hnClass);
+
+        System.out.println(flight.getDeparturePlace());
+        System.out.println(ptClass);
+        System.out.println(pt_dbClass);
+        System.out.println(tgClass);
+        System.out.println(hnClass);
+        flight.setNew(true);
+        ptClass.setNew(true);
+        pt_dbClass.setNew(true);
+        tgClass.setNew(true);
+        hnClass.setNew(true);
 
         flightRepository.save(flight);
-        classFlightRepository.save(pt);
-        classFlightRepository.save(pt_db);
-        classFlightRepository.save(tg);
-        classFlightRepository.save(hn);
 
-        return Response.ok(flightItem);
+        classFlightRepository.save(ptClass);
+        classFlightRepository.save(pt_dbClass);
+        classFlightRepository.save(tgClass);
+        classFlightRepository.save(hnClass);
+
+        return Response.ok("Create successfully!");
     }
 
 }

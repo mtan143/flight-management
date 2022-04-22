@@ -1,7 +1,10 @@
 package com.flightmanagement.flightmanagement.flight;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,7 +16,31 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("tbl_Flight")
-public class Flight {
+public class Flight implements Persistable {
+
+
+    public Flight(Integer flightId, String flightCode, String name, int airlineId,
+                  FlightStatus flightStatus, Date departure, int quantityTicket,
+                  String departurePlace, String destination, int time, String gateId,
+                  Status status, String createdBy, Date createdDate, String lastUpdateBy,
+                  Date lastUpdateDate) {
+        this.flightId = flightId;
+        this.flightCode = flightCode;
+        this.name = name;
+        this.airlineId = airlineId;
+        this.flightStatus = flightStatus;
+        this.departure = departure;
+        this.quantityTicket = quantityTicket;
+        this.departurePlace = departurePlace;
+        this.destination = destination;
+        this.time = time;
+        this.gateId = gateId;
+        this.status = status;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
+        this.lastUpdateBy = lastUpdateBy;
+        this.lastUpdateDate = lastUpdateDate;
+    }
 
     @Id
     @Column("flightId")
@@ -38,7 +65,7 @@ public class Flight {
     @Column("quantityTicket")
     private int quantityTicket;
 
-    @Column("name")
+    @Column("departurePlace")
     private String departurePlace;
 
     @Column("destination")
@@ -65,4 +92,25 @@ public class Flight {
 
     @Column("lastUpdateDate")
     private Date lastUpdateDate;
+
+    @Transient
+    @JsonIgnore
+    private boolean newEntity;
+
+    @Override
+    public Object getId() {
+        return flightId;
+    }
+
+    public void setNew(boolean newInstance) {
+        this.newEntity = newInstance;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isNew() {
+        return newEntity;
+    }
+
+
 }
