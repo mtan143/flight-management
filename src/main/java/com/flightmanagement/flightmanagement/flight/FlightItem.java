@@ -1,11 +1,13 @@
 package com.flightmanagement.flightmanagement.flight;
 
 import com.flightmanagement.flightmanagement.flight.classtype.ClassType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
 public class FlightItem {
 
     private Integer flightId;
@@ -18,6 +20,9 @@ public class FlightItem {
     private String destination;
     private int time;
     private String gateId;
+    private int quantityTicket;
+    private String timeDeparture;
+    private String timeArrival;
 
     private Integer ptId;
     private String ptCode;

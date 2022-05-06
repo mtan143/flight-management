@@ -1,6 +1,7 @@
 package com.flightmanagement.flightmanagement.flight;
 
 import com.flightmanagement.flightmanagement.common.Response;
+import com.flightmanagement.flightmanagement.common.SearchObject;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
 import com.flightmanagement.flightmanagement.flight.classtype.*;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +12,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Service
 @Slf4j
@@ -32,7 +33,35 @@ public class FlightService {
      */
     public Response getAll() {
         log.info("Get all flight from database...");
-        return Response.ok(flightRepository.findAll());
+
+        List<FlightItem> result = new ArrayList<>();
+
+        Iterable<Flight> flights = flightRepository.findAll();
+
+        flights.forEach(flight -> {
+//            System.out.println(flight);
+            List<ClassFlightManage> classFlightManages = this.classFlightRepository
+                    .findByFlightId(flight.getFlightId());
+//            classFlightManages.forEach(System.out::println);
+            Optional<ClassFlightManage> pt = classFlightManages.stream().filter(c ->
+                    c.getClassType().equals(ClassType.PHO_THONG)).findFirst();
+            Optional<ClassFlightManage> pt_db = classFlightManages.stream().filter(c ->
+                    c.getClassType().equals(ClassType.PHO_THONG_DAC_BIET)).findFirst();
+            Optional<ClassFlightManage> tg = classFlightManages.stream().filter(c ->
+                    c.getClassType().equals(ClassType.THUONG_GIA)).findFirst();
+            Optional<ClassFlightManage> hn = classFlightManages.stream().filter(c ->
+                    c.getClassType().equals(ClassType.HANG_NHAT)).findFirst();
+            FlightItem flightItem = new FlightItem(flight.getFlightId(), flight.getFlightCode(),
+                    flight.getName(), flight.getAirlineId(), flight.getFlightStatus(), flight.getDeparture(),
+                    flight.getDeparturePlace(), flight.getDestination(), flight.getTime(), flight.getGateId(),
+                    flight.getQuantityTicket(), flight.getTimeDeparture(), flight.getTimeArrival(),
+                    pt.get().getClassFlightId(), pt.get().getClassFlightCode(), pt.get().getPrice(), pt.get().getQuantity(),
+                    pt.get().getClassFlightId(), pt_db.get().getClassFlightCode(), pt_db.get().getPrice(), pt_db.get().getQuantity(),
+                    tg.get().getClassFlightId(), tg.get().getClassFlightCode(), tg.get().getPrice(), tg.get().getQuantity(), hn.get().getClassFlightId(),
+                    hn.get().getClassFlightCode(), hn.get().getPrice(), hn.get().getQuantity());
+            result.add(flightItem);
+        });
+        return Response.ok(result);
     }
 
     /**
@@ -117,6 +146,16 @@ public class FlightService {
         existingFlight.setLastUpdateBy("ADMIN");
         existingFlight.setLastUpdateDate(Date.from(Instant.now()));
 
+        List<ClassFlightManage> classFlightManages = this.classFlightRepository
+                .findByFlightId(existingFlight.getFlightId());
+
+        classFlightManages.forEach(c -> {
+            c.setStatus(Status.DISABLED);
+            c.setLastUpdateBy("ADMIN");
+            c.setLastUpdateDate(Date.from(Instant.now()));
+            classFlightRepository.save(c);
+        });
+
         flightRepository.save(existingFlight);
         return Response.ok("Deleted flight object: "
                 + existingFlight.getAirlineId() + " " + existingFlight.getName());
@@ -147,13 +186,13 @@ public class FlightService {
     public Response findFlightStatus(String flightCode) {
         log.info("Execute findFlightStatus method from Airline Service");
 
-        Flight flight = flightRepository.findBy(flightCode);
+        FlightStatus flightStatus = flightRepository.findFlightStatus(flightCode);
 
-        if (Objects.isNull(flight)) {
+        if (Objects.isNull(flightStatus)) {
             throw new BusinessException(FlightError.FLIGHT_NOT_EXIST);
         }
 
-        return Response.ok(flightRepository.findFlightStatus(flightCode));
+        return Response.ok(flightStatus);
     }
 
 
@@ -164,27 +203,48 @@ public class FlightService {
      */
     public Response searchFlight(String departurePlace, String destination, int quantity,
                                  ClassType classType, String departure) {
-        System.out.println(departure);
-        List<Flight> flights = flightRepository.searchFlight(departurePlace, destination,
+        List<SearchObject> flights = flightRepository.searchFlight(departurePlace, destination,
                 quantity, classType, departure);
 
         return flights.isEmpty() ? Response.failed(new BusinessException(FlightError.FLIGHT_NOT_FOUND))
                 : Response.ok(flights);
     }
 
-    /**
-     * Counting number of flight at that day
-     * @return
-     */
-    /*public Response flightOfDayCounting(LocalDateTime time) {
-        return Response.ok(flightRepository.flightOfDayCounting(time));
-    }*/
 
     /**
      * Create new flight transaction
+     * @param flightId
+     * @param flightCode
+     * @param name
+     * @param airlineId
+     * @param flightStatus
+     * @param departure
+     * @param departurePlace
+     * @param destination
+     * @param time
+     * @param gateId
+     * @param ptId
+     * @param ptCode
+     * @param ptPrice
+     * @param ptQuantity
+     * @param pt_dbId
+     * @param pt_dbCode
+     * @param pt_dbPrice
+     * @param pt_dbQuantity
+     * @param tgId
+     * @param tgCode
+     * @param tgPrice
+     * @param tgQuantity
+     * @param hnId
+     * @param hnCode
+     * @param hnPrice
+     * @param hnQuantity
+     * @return
+     * @throws ParseException
      */
     public Response create(Integer flightId, String flightCode, String name, int airlineId, FlightStatus flightStatus,
-            String departure, String departurePlace, String destination, int time, String gateId, Integer ptId,
+            String departure, String departurePlace, String destination, int time, String gateId,
+            String timeDeparture, String timeArrival, Integer ptId,
             String ptCode, int ptPrice, int ptQuantity, Integer pt_dbId, String pt_dbCode, int pt_dbPrice, int pt_dbQuantity,
                            Integer tgId, String tgCode, int tgPrice, int tgQuantity, Integer hnId, String hnCode, int hnPrice,
             int hnQuantity) throws ParseException {
@@ -193,7 +253,7 @@ public class FlightService {
                 new SimpleDateFormat("yyyy-MM-dd").parse(departure),
                 ptQuantity + pt_dbQuantity + tgQuantity + hnQuantity,
                 departurePlace, destination,
-                time, gateId, Status.ACTIVE, "ADMIN", Date.from(Instant.now()),
+                time, timeDeparture, timeArrival, gateId, Status.ACTIVE, "ADMIN", Date.from(Instant.now()),
                 "ADMIN", Date.from(Instant.now()));
 
         ClassFlightManage ptClass = new ClassFlightManage(ptId ,ptCode,
@@ -242,5 +302,44 @@ public class FlightService {
 
         return Response.ok("Create successfully!");
     }
+
+    /**
+     * Get all active flight
+     * @return
+     */
+    public Response getActiveFlight() {
+        log.info("Get all active flight from database...");
+
+        List<FlightItem> result = new ArrayList<>();
+
+        Iterable<Flight> flights = flightRepository.getActiveFlight();
+
+        flights.forEach(flight -> {
+//            System.out.println(flight);
+            List<ClassFlightManage> classFlightManages = this.classFlightRepository
+                    .findByFlightId(flight.getFlightId());
+//            classFlightManages.forEach(System.out::println);
+            Optional<ClassFlightManage> pt = classFlightManages.stream().filter(c ->
+                    c.getClassType().equals(ClassType.PHO_THONG)).findFirst();
+            Optional<ClassFlightManage> pt_db = classFlightManages.stream().filter(c ->
+                    c.getClassType().equals(ClassType.PHO_THONG_DAC_BIET)).findFirst();
+            Optional<ClassFlightManage> tg = classFlightManages.stream().filter(c ->
+                    c.getClassType().equals(ClassType.THUONG_GIA)).findFirst();
+            Optional<ClassFlightManage> hn = classFlightManages.stream().filter(c ->
+                    c.getClassType().equals(ClassType.HANG_NHAT)).findFirst();
+            FlightItem flightItem = new FlightItem(flight.getFlightId(), flight.getFlightCode(),
+                    flight.getName(), flight.getAirlineId(), flight.getFlightStatus(), flight.getDeparture(),
+                    flight.getDeparturePlace(), flight.getDestination(), flight.getTime(), flight.getGateId(),
+                    flight.getQuantityTicket(), flight.getTimeDeparture(), flight.getTimeArrival(),
+                    pt.get().getClassFlightId(), pt.get().getClassFlightCode(), pt.get().getPrice(), pt.get().getQuantity(),
+                    pt.get().getClassFlightId(), pt_db.get().getClassFlightCode(), pt_db.get().getPrice(), pt_db.get().getQuantity(),
+                    tg.get().getClassFlightId(), tg.get().getClassFlightCode(), tg.get().getPrice(), tg.get().getQuantity(), hn.get().getClassFlightId(),
+                    hn.get().getClassFlightCode(), hn.get().getPrice(), hn.get().getQuantity());
+            result.add(flightItem);
+        });
+        return Response.ok(result);
+    }
+
+
 
 }

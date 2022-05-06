@@ -6,10 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
+
+import static com.flightmanagement.flightmanagement.passenger.PassengerService.GENERAL_ID;
 
 @Service
 @Slf4j
@@ -44,19 +48,30 @@ public class AirlineService {
 
     /**
      * Insert new airline object to database
-     * @param airline
+     * @param airlineCode
+     * @param name
+     * @param foundDate
      * @return
+     * @throws ParseException
      */
-    public Response save(Airline airline) {
+    public Response save(String airlineCode, String name, String foundDate) throws ParseException {
         log.info("Execute save method from Airline Service");
 
-        AirlineValidator.validate(airline);
+        Airline airline = new Airline();
+
+        airline.setAirlineCode(airlineCode);
+        airline.setName(name);
+        airline.setFoundDate(new SimpleDateFormat("yyyy-MM-dd").parse(foundDate));
+
+        airline.setAirlineId(GENERAL_ID++);
         airline.setStatus(Status.ACTIVE);
         airline.setCreatedBy("SYSTEM");
         airline.setLastUpdateBy("SYSTEM");
         airline.setCreatedDate(Date.from(Instant.now()));
         airline.setLastUpdateDate(Date.from(Instant.now()));
+        airline.setNew(true);
 
+        AirlineValidator.validate(airline);
         return Response.ok(airlineRepository.save(airline));
     }
 
@@ -84,7 +99,7 @@ public class AirlineService {
         existAirline.setLastUpdateBy("ADMIN");
         existAirline.setLastUpdateDate(Date.from(Instant.now()));
 
-        return Response.ok(this.save(existAirline));
+        return Response.ok(airlineRepository.save(existAirline));
     }
 
 

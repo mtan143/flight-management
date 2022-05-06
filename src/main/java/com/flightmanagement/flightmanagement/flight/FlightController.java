@@ -55,23 +55,12 @@ public class FlightController {
         return flightService.findFlightStatus(flightCode);
     }
 
-//    @GetMapping("/search")
-//    public Response searchFlight(@RequestParam String departurePlace, @RequestParam String destination,
-//                                 @RequestParam int quantity,
-//                                 @RequestParam ClassType classType, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date departure) {
-//        return flightService.searchFlight(departurePlace, destination,
-//                quantity, classType, departure);
-//    }
     @PostMapping("/search")
     public Response searchFlight(@RequestBody SearchItem searchItem) {
         return flightService.searchFlight(searchItem.getDeparturePlace(), searchItem.getDestination(),
                 searchItem.getQuantity(), searchItem.getClassType(), new SimpleDateFormat("yyyy-MM-dd").format(searchItem.getDeparture()));
     }
 
-    /*@GetMapping("/count")
-    public Response flightOfDayCounting(@RequestBody LocalDateTime time) {
-        return flightService.flightOfDayCounting(time);
-    }*/
 
     @GetMapping("/classTypes")
     public Response getClassTypeByFlightCode(@RequestParam int flightId) {
@@ -80,14 +69,19 @@ public class FlightController {
 
     @PostMapping("/create")
     public Response create(@RequestBody FlightItem flightItem) throws ParseException {
-        System.out.println(flightItem);
+//        System.out.println(flightItem);
         return flightService.create(flightItem.getFlightId(), flightItem.getFlightCode(), flightItem.getName(),
                 flightItem.getAirlineId(), flightItem.getFlightStatus(), new SimpleDateFormat("yyyy-MM-dd").format(flightItem.getDeparture()), flightItem.getDeparturePlace(),
-                flightItem.getDestination(), flightItem.getTime(), flightItem.getGateId(), flightItem.getPtId(), flightItem.getPtCode(),
+                flightItem.getDestination(), flightItem.getTime(), flightItem.getGateId(),
+                flightItem.getTimeDeparture(), flightItem.getTimeArrival(), flightItem.getPtId(), flightItem.getPtCode(),
                 flightItem.getPtPrice(), flightItem.getPtQuantity(), flightItem.getPt_dbId(), flightItem.getPt_dbCode(),
                 flightItem.getPt_dbPrice(), flightItem.getPt_dbQuantity(), flightItem.getTgId(), flightItem.getTgCode(),
                 flightItem.getTgPrice(), flightItem.getTgQuantity(), flightItem.getHnId(), flightItem.getHnCode(), flightItem.getHnPrice(),
                 flightItem.getHnQuantity());
+    }
+    @GetMapping("/active")
+    public Response getActiveFlight() {
+        return flightService.getActiveFlight();
     }
 
 }

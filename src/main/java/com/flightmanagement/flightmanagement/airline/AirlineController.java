@@ -4,6 +4,9 @@ import com.flightmanagement.flightmanagement.common.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 @RestController
 @RequestMapping("/partner/airline")
 @CrossOrigin
@@ -23,8 +26,9 @@ public class AirlineController {
     }
 
     @PostMapping
-    public Response save(@RequestBody Airline airline) {
-        return airlineService.save(airline);
+    public Response save(@RequestBody Airline airline) throws ParseException {
+        return airlineService.save(airline.getAirlineCode(), airline.getName(),
+                new SimpleDateFormat("yyyy-MM-dd").format(airline.getFoundDate()));
     }
 
     @PutMapping("/{id}")

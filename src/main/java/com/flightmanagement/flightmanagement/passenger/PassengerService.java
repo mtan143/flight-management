@@ -25,6 +25,8 @@ public class PassengerService {
     @Autowired
     private PassengerRepository passengerRepository;
 
+    public static int GENERAL_ID = 1000;
+
     /**
      * Get all passengers data from database
      * @return
@@ -55,6 +57,7 @@ public class PassengerService {
     public Response save(Passenger passenger) {
         log.info("Execute save method from Passenger Service");
 
+        passenger.setPassengerId(GENERAL_ID++);
         PassengerValidator.validate(passenger);
         passenger.setStatus(ACTIVE);
         passenger.setCreatedBy("SYSTEM");

@@ -4,6 +4,7 @@ import com.flightmanagement.flightmanagement.common.Response;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
 import com.flightmanagement.flightmanagement.flight.FlightRepository;
 import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightService;
+import com.flightmanagement.flightmanagement.passenger.Passenger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,7 @@ public class TicketService {
     private TicketRepository ticketRepository;
     @Autowired
     private ClassFlightService classFlightService;
-    @Autowired
-    private FlightRepository flightRepository;
+
 
     /**
      * Get all ticket data from database
@@ -64,6 +64,7 @@ public class TicketService {
         ticket.setLastUpdateBy("SYSTEM");
         ticket.setCreatedDate(Date.from(Instant.now()));
         ticket.setLastUpdateDate(Date.from(Instant.now()));
+        ticket.setNew(true);
         // Send price transaction to Profile App
         if (ticket.getUserId() != null) {
 //            sendTransaction(String AppId, Integer userId, ticket.getTotalPrice())
@@ -71,7 +72,7 @@ public class TicketService {
         ticketRepository.save(ticket);
         classFlightService.updateRemainingTicket(ticket.getClassFlightId());
 
-        return Response.ok();
+        return Response.ok(ticket);
     }
 
     /**
@@ -146,23 +147,6 @@ public class TicketService {
     }
 
     /**
-     * Retrieve all user's transaction by email
-     * @param email
-     * @return
-     */
-//    public Response historyTransaction(String email) {
-//
-//        List<Ticket> tickets = ticketRepository.historyTransaction(email);
-//
-//        tickets.stream().map(t ->
-//                new Transaction(t.getTicketId(), t.getCreatedDate(),
-//                        t.getTicketCode(), t.getTotalPrice(), t.getTicketStatus(),
-//                        flightRepository.getByTicketCode(t.getTicketCode()).getDeparturePlace(),
-//                        flightRepository.getByTicketCode(t.getTicketCode()).getDestination()));
-//        return Response.ok(tickets);
-//    }
-
-    /**
      * Get all ticket by flight code
      * @param flightCode
      * @return
@@ -185,6 +169,10 @@ public class TicketService {
 //    }
 
 //    public Response refund() {
+//
+//    }
+
+//    public Response create(InfoContact infoContact, List<Passenger> passengers) {
 //
 //    }
 

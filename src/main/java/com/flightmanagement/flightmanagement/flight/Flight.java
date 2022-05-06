@@ -18,12 +18,10 @@ import java.util.Date;
 @Table("tbl_Flight")
 public class Flight implements Persistable {
 
-
-    public Flight(Integer flightId, String flightCode, String name, int airlineId,
-                  FlightStatus flightStatus, Date departure, int quantityTicket,
-                  String departurePlace, String destination, int time, String gateId,
-                  Status status, String createdBy, Date createdDate, String lastUpdateBy,
-                  Date lastUpdateDate) {
+    public Flight(Integer flightId, String flightCode, String name, int airlineId, FlightStatus flightStatus,
+                  Date departure, int quantityTicket, String departurePlace, String destination, int time,
+                  String timeDeparture, String timeArrival, String gateId, Status status, String createdBy,
+                  Date createdDate, String lastUpdateBy, Date lastUpdateDate) {
         this.flightId = flightId;
         this.flightCode = flightCode;
         this.name = name;
@@ -34,6 +32,8 @@ public class Flight implements Persistable {
         this.departurePlace = departurePlace;
         this.destination = destination;
         this.time = time;
+        this.timeDeparture = timeDeparture;
+        this.timeArrival = timeArrival;
         this.gateId = gateId;
         this.status = status;
         this.createdBy = createdBy;
@@ -73,6 +73,12 @@ public class Flight implements Persistable {
 
     @Column("time")
     private int time;
+
+    @Column("timeDeparture")
+    private String timeDeparture;
+
+    @Column("timeArrival")
+    private String timeArrival;
 
     @Column("gateId")
     private String gateId;
