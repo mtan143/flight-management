@@ -249,7 +249,7 @@ public class FlightService {
                            Integer tgId, String tgCode, int tgPrice, int tgQuantity, Integer hnId, String hnCode, int hnPrice,
             int hnQuantity) throws ParseException {
 
-        Flight flight = new Flight(flightId, flightCode, name, airlineId, FlightStatus.Khoi_Tao,
+        Flight flight = new Flight(name, airlineId, FlightStatus.Khoi_Tao,
                 new SimpleDateFormat("yyyy-MM-dd").parse(departure),
                 ptQuantity + pt_dbQuantity + tgQuantity + hnQuantity,
                 departurePlace, destination,

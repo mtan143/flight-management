@@ -9,11 +9,8 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
-
-import static com.flightmanagement.flightmanagement.passenger.PassengerService.GENERAL_ID;
 
 @Service
 @Slf4j
@@ -63,7 +60,6 @@ public class AirlineService {
         airline.setName(name);
         airline.setFoundDate(new SimpleDateFormat("yyyy-MM-dd").parse(foundDate));
 
-        airline.setAirlineId(GENERAL_ID++);
         airline.setStatus(Status.ACTIVE);
         airline.setCreatedBy("SYSTEM");
         airline.setLastUpdateBy("SYSTEM");
