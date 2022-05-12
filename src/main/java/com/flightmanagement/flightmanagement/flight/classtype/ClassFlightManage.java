@@ -8,8 +8,6 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -19,12 +17,11 @@ import java.util.Date;
 @Table("tbl_ClassType")
 public class ClassFlightManage implements Persistable {
 
-    public ClassFlightManage(Integer classFlightId, String classFlightCode, ClassType classType,
+    public ClassFlightManage(ClassType classType,
                              int price, int quantity, int remainingQuantity, Status status, int flightId,
                              String createdBy, Date createdDate, String lastUpdateBy, Date lastUpdateDate) {
-        this.classFlightId = classFlightId;
-        this.classFlightCode = classFlightCode;
         this.classType = classType;
+        this.classFlightCode = generateFlightCode();
         this.price = price;
         this.quantity = quantity;
         this.remainingQuantity = remainingQuantity;
@@ -34,6 +31,20 @@ public class ClassFlightManage implements Persistable {
         this.createdDate = createdDate;
         this.lastUpdateBy = lastUpdateBy;
         this.lastUpdateDate = lastUpdateDate;
+    }
+
+    private String generateFlightCode() {
+        return String.format("%04d", flightId)
+                .concat(changeClassType(classType))
+                .concat(String.format("%04d", classFlightId));
+    }
+    private String changeClassType(ClassType classType) {
+        switch (classType) {
+            case PHO_THONG: return "PTXX";
+            case PHO_THONG_DAC_BIET: return "PTDB";
+            case THUONG_GIA: return "TGXX";
+            default: return "HNXX";
+        }
     }
 
     @Id
@@ -61,7 +72,6 @@ public class ClassFlightManage implements Persistable {
 
     @Column("flightId")
     private int flightId;
-
 
     @Column("createdBy")
     private String createdBy;

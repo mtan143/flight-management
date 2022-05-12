@@ -22,7 +22,8 @@ public class Flight implements Persistable {
                   Date departure, int quantityTicket, String departurePlace, String destination, int time,
                   String timeDeparture, String timeArrival, String gateId, Status status, String createdBy,
                   Date createdDate, String lastUpdateBy, Date lastUpdateDate) {
-        this.flightCode = flightCode;
+
+        this.flightCode = generateFlightCode();
         this.name = name;
         this.airlineId = airlineId;
         this.flightStatus = flightStatus;
@@ -117,5 +118,29 @@ public class Flight implements Persistable {
         return newEntity;
     }
 
+    public String parsePlace (String place) {
+        switch (place.substring(0, place.length() - 10)) {
+            case "Da Nang": return "DAD";
+            case "Ha Noi": return "HAN";
+            case "Da Lat": return "DLI";
+            case "Nha Trang": return "CXR";
+            case "Phu Quoc": return "PQC";
+            case "Hue": return "HUI";
+            case "Vinh": return "VII";
+            default: return "SGN";
+
+        }
+    }
+
+    public String generateFlightCode() {
+        return String.format("%04d", airlineId)
+                .concat(timeDeparture.substring(0, 2))
+                .concat(timeDeparture.substring(3, 5))
+                .concat(departure.toString().substring(8, 10))
+                .concat(departure.toString().substring(5, 7))
+                .concat(departure.toString().substring(2, 4))
+                .concat(parsePlace(departurePlace))
+                .concat(parsePlace(destination));
+    }
 
 }

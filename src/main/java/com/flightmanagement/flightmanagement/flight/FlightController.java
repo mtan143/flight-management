@@ -70,13 +70,13 @@ public class FlightController {
     @PostMapping("/create")
     public Response create(@RequestBody FlightItem flightItem) throws ParseException {
 //        System.out.println(flightItem);
-        return flightService.create(flightItem.getFlightId(), flightItem.getFlightCode(), flightItem.getName(),
-                flightItem.getAirlineId(), flightItem.getFlightStatus(), new SimpleDateFormat("yyyy-MM-dd").format(flightItem.getDeparture()), flightItem.getDeparturePlace(),
+        return flightService.create(flightItem.getName(),
+                flightItem.getAirlineId(), new SimpleDateFormat("yyyy-MM-dd").format(flightItem.getDeparture()), flightItem.getDeparturePlace(),
                 flightItem.getDestination(), flightItem.getTime(), flightItem.getGateId(),
-                flightItem.getTimeDeparture(), flightItem.getTimeArrival(), flightItem.getPtId(), flightItem.getPtCode(),
-                flightItem.getPtPrice(), flightItem.getPtQuantity(), flightItem.getPt_dbId(), flightItem.getPt_dbCode(),
-                flightItem.getPt_dbPrice(), flightItem.getPt_dbQuantity(), flightItem.getTgId(), flightItem.getTgCode(),
-                flightItem.getTgPrice(), flightItem.getTgQuantity(), flightItem.getHnId(), flightItem.getHnCode(), flightItem.getHnPrice(),
+                flightItem.getTimeDeparture(), flightItem.getTimeArrival(),
+                flightItem.getPtPrice(), flightItem.getPtQuantity(),
+                flightItem.getPt_dbPrice(), flightItem.getPt_dbQuantity(),
+                flightItem.getTgPrice(), flightItem.getTgQuantity(), flightItem.getHnPrice(),
                 flightItem.getHnQuantity());
     }
     @GetMapping("/active")

@@ -51,14 +51,13 @@ public class FlightService {
                     c.getClassType().equals(ClassType.THUONG_GIA)).findFirst();
             Optional<ClassFlightManage> hn = classFlightManages.stream().filter(c ->
                     c.getClassType().equals(ClassType.HANG_NHAT)).findFirst();
-            FlightItem flightItem = new FlightItem(flight.getFlightId(), flight.getFlightCode(),
-                    flight.getName(), flight.getAirlineId(), flight.getFlightStatus(), flight.getDeparture(),
+            FlightItem flightItem = new FlightItem(
+                    flight.getName(), flight.getAirlineId(), flight.getDeparture(),
                     flight.getDeparturePlace(), flight.getDestination(), flight.getTime(), flight.getGateId(),
                     flight.getQuantityTicket(), flight.getTimeDeparture(), flight.getTimeArrival(),
-                    pt.get().getClassFlightId(), pt.get().getClassFlightCode(), pt.get().getPrice(), pt.get().getQuantity(),
-                    pt.get().getClassFlightId(), pt_db.get().getClassFlightCode(), pt_db.get().getPrice(), pt_db.get().getQuantity(),
-                    tg.get().getClassFlightId(), tg.get().getClassFlightCode(), tg.get().getPrice(), tg.get().getQuantity(), hn.get().getClassFlightId(),
-                    hn.get().getClassFlightCode(), hn.get().getPrice(), hn.get().getQuantity());
+                    pt.get().getPrice(), pt.get().getQuantity(),
+                    pt_db.get().getPrice(), pt_db.get().getQuantity(),
+                    tg.get().getPrice(), tg.get().getQuantity(), hn.get().getPrice(), hn.get().getQuantity());
             result.add(flightItem);
         });
         return Response.ok(result);
@@ -210,44 +209,11 @@ public class FlightService {
                 : Response.ok(flights);
     }
 
-
-    /**
-     * Create new flight transaction
-     * @param flightId
-     * @param flightCode
-     * @param name
-     * @param airlineId
-     * @param flightStatus
-     * @param departure
-     * @param departurePlace
-     * @param destination
-     * @param time
-     * @param gateId
-     * @param ptId
-     * @param ptCode
-     * @param ptPrice
-     * @param ptQuantity
-     * @param pt_dbId
-     * @param pt_dbCode
-     * @param pt_dbPrice
-     * @param pt_dbQuantity
-     * @param tgId
-     * @param tgCode
-     * @param tgPrice
-     * @param tgQuantity
-     * @param hnId
-     * @param hnCode
-     * @param hnPrice
-     * @param hnQuantity
-     * @return
-     * @throws ParseException
-     */
-    public Response create(Integer flightId, String flightCode, String name, int airlineId, FlightStatus flightStatus,
-            String departure, String departurePlace, String destination, int time, String gateId,
-            String timeDeparture, String timeArrival, Integer ptId,
-            String ptCode, int ptPrice, int ptQuantity, Integer pt_dbId, String pt_dbCode, int pt_dbPrice, int pt_dbQuantity,
-                           Integer tgId, String tgCode, int tgPrice, int tgQuantity, Integer hnId, String hnCode, int hnPrice,
-            int hnQuantity) throws ParseException {
+    public Response create(String name, int airlineId, String departure, String departurePlace,
+                           String destination, int time, String gateId, String timeDeparture,
+                           String timeArrival, int ptPrice, int ptQuantity, int pt_dbPrice,
+                           int pt_dbQuantity, int tgPrice, int tgQuantity, int hnPrice, int hnQuantity)
+            throws ParseException {
 
         Flight flight = new Flight(name, airlineId, FlightStatus.Khoi_Tao,
                 new SimpleDateFormat("yyyy-MM-dd").parse(departure),
@@ -256,44 +222,49 @@ public class FlightService {
                 time, timeDeparture, timeArrival, gateId, Status.ACTIVE, "ADMIN", Date.from(Instant.now()),
                 "ADMIN", Date.from(Instant.now()));
 
-        ClassFlightManage ptClass = new ClassFlightManage(ptId ,ptCode,
-                ClassType.PHO_THONG, ptPrice, ptQuantity, ptQuantity, Status.ACTIVE,
-                flightId, "ADMIN", Date.from(Instant.now()), "ADMIN",
-                Date.from(Instant.now()));
-
-        ClassFlightManage pt_dbClass = new ClassFlightManage(pt_dbId, pt_dbCode,
-                ClassType.PHO_THONG_DAC_BIET, pt_dbPrice, pt_dbQuantity, pt_dbQuantity, Status.ACTIVE,
-                flightId, "ADMIN", Date.from(Instant.now()), "ADMIN",
-                Date.from(Instant.now()));
-
-        ClassFlightManage tgClass = new ClassFlightManage(tgId, tgCode,
-                ClassType.THUONG_GIA, tgPrice, tgQuantity, tgQuantity, Status.ACTIVE,
-                flightId, "ADMIN", Date.from(Instant.now()), "ADMIN",
-                Date.from(Instant.now()));
-
-        ClassFlightManage hnClass = new ClassFlightManage(hnId, hnCode,
-                ClassType.HANG_NHAT, hnPrice, hnQuantity, hnQuantity, Status.ACTIVE,
-                flightId, "ADMIN", Date.from(Instant.now()), "ADMIN",
-                Date.from(Instant.now()));
-
+        flight.setNew(true);
         FlightValidator.validate(flight);
+        flightRepository.save(flight);
+
+
+        ClassFlightManage ptClass = new ClassFlightManage(
+                ClassType.PHO_THONG, ptPrice, ptQuantity, ptQuantity, Status.ACTIVE,
+                flight.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
+                Date.from(Instant.now()));
+
+        ClassFlightManage pt_dbClass = new ClassFlightManage(
+                ClassType.PHO_THONG_DAC_BIET, pt_dbPrice, pt_dbQuantity, pt_dbQuantity, Status.ACTIVE,
+                flight.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
+                Date.from(Instant.now()));
+
+        ClassFlightManage tgClass = new ClassFlightManage(
+                ClassType.THUONG_GIA, tgPrice, tgQuantity, tgQuantity, Status.ACTIVE,
+                flight.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
+                Date.from(Instant.now()));
+
+        ClassFlightManage hnClass = new ClassFlightManage(
+                ClassType.HANG_NHAT, hnPrice, hnQuantity, hnQuantity, Status.ACTIVE,
+                flight.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
+                Date.from(Instant.now()));
+
+
         ClassFlightValidator.validate(ptClass);
         ClassFlightValidator.validate(pt_dbClass);
         ClassFlightValidator.validate(tgClass);
         ClassFlightValidator.validate(hnClass);
 
-        System.out.println(flight.getDeparturePlace());
+        System.out.println(flight);
         System.out.println(ptClass);
         System.out.println(pt_dbClass);
         System.out.println(tgClass);
         System.out.println(hnClass);
-        flight.setNew(true);
+
         ptClass.setNew(true);
         pt_dbClass.setNew(true);
         tgClass.setNew(true);
         hnClass.setNew(true);
 
-        flightRepository.save(flight);
+
 
         classFlightRepository.save(ptClass);
         classFlightRepository.save(pt_dbClass);
@@ -327,14 +298,13 @@ public class FlightService {
                     c.getClassType().equals(ClassType.THUONG_GIA)).findFirst();
             Optional<ClassFlightManage> hn = classFlightManages.stream().filter(c ->
                     c.getClassType().equals(ClassType.HANG_NHAT)).findFirst();
-            FlightItem flightItem = new FlightItem(flight.getFlightId(), flight.getFlightCode(),
-                    flight.getName(), flight.getAirlineId(), flight.getFlightStatus(), flight.getDeparture(),
+            FlightItem flightItem = new FlightItem(
+                    flight.getName(), flight.getAirlineId(), flight.getDeparture(),
                     flight.getDeparturePlace(), flight.getDestination(), flight.getTime(), flight.getGateId(),
                     flight.getQuantityTicket(), flight.getTimeDeparture(), flight.getTimeArrival(),
-                    pt.get().getClassFlightId(), pt.get().getClassFlightCode(), pt.get().getPrice(), pt.get().getQuantity(),
-                    pt.get().getClassFlightId(), pt_db.get().getClassFlightCode(), pt_db.get().getPrice(), pt_db.get().getQuantity(),
-                    tg.get().getClassFlightId(), tg.get().getClassFlightCode(), tg.get().getPrice(), tg.get().getQuantity(), hn.get().getClassFlightId(),
-                    hn.get().getClassFlightCode(), hn.get().getPrice(), hn.get().getQuantity());
+                    pt.get().getPrice(), pt.get().getQuantity(),
+                    pt_db.get().getPrice(), pt_db.get().getQuantity(),
+                    tg.get().getPrice(), tg.get().getQuantity(), hn.get().getPrice(), hn.get().getQuantity());
             result.add(flightItem);
         });
         return Response.ok(result);
