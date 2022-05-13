@@ -2,6 +2,10 @@ package com.flightmanagement.flightmanagement.flight.classtype;
 
 import com.flightmanagement.flightmanagement.airline.AirlineValidator;
 import com.flightmanagement.flightmanagement.common.Response;
+import com.flightmanagement.flightmanagement.exception.BusinessException;
+import com.flightmanagement.flightmanagement.flight.Flight;
+import com.flightmanagement.flightmanagement.flight.FlightError;
+import com.flightmanagement.flightmanagement.flight.FlightValidator;
 import com.flightmanagement.flightmanagement.flight.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Objects;
 
 import static com.flightmanagement.flightmanagement.flight.Status.ACTIVE;
 
@@ -25,7 +30,7 @@ public class ClassFlightService {
      * @param classFlightManage
      * @return
      */
-    public Response create(ClassFlightManage classFlightManage) {
+    public Response save(ClassFlightManage classFlightManage) {
         log.info("Execute save method from ClassFlight Service");
 
         ClassFlightValidator.validate(classFlightManage);
@@ -36,6 +41,34 @@ public class ClassFlightService {
         classFlightManage.setLastUpdateDate(Date.from(Instant.now()));
 
         return Response.ok(classFlightRepository.save(classFlightManage));
+    }
+
+    /**
+     * Update existing classType in database
+     * @param classType
+     * @param id
+     * @return
+     */
+    public Response save(ClassFlightManage classType, Integer id) {
+
+        log.info("Execute update method from ClassFLight Service");
+
+        ClassFlightManage existClassType = classFlightRepository.findById(id).get();
+
+        if (Objects.isNull(existClassType)) {
+            throw new BusinessException(ClassFlightError.CLASS_FLIGHT_NOT_EXIST);
+        }
+
+        ClassFlightValidator.validate(existClassType);
+
+        // setting new data for existing object
+        existClassType.setPrice(classType.getPrice());
+        existClassType.setQuantity(classType.getQuantity());
+        existClassType.setRemainingQuantity(classType.getRemainingQuantity());
+        existClassType.setLastUpdateBy("ADMIN");
+        existClassType.setLastUpdateDate(Date.from(Instant.now()));
+
+        return Response.ok(this.save(existClassType));
     }
 
     /**
@@ -58,7 +91,7 @@ public class ClassFlightService {
      * @param flightId
      * @return
      */
-    public Response findByFlightCode(int flightId) {
+    public Response findByFlightId(int flightId) {
         return Response.ok(classFlightRepository.findByFlightId(flightId));
     }
 

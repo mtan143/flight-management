@@ -31,35 +31,23 @@ public class FlightService {
      * Get all flight data from database
      * @return
      */
-    public Response getAll() {
+    public Response getAll(String airlineCode) {
         log.info("Get all flight from database...");
 
-        List<FlightItem> result = new ArrayList<>();
+        List<ResultFlight> result = new ArrayList<>();
 
-        Iterable<Flight> flights = flightRepository.findAll();
+        List<Flight> list = flightRepository.getFlightByAirlineCode(airlineCode);
 
-        flights.forEach(flight -> {
-//            System.out.println(flight);
+        list.forEach(item -> {
             List<ClassFlightManage> classFlightManages = this.classFlightRepository
-                    .findByFlightId(flight.getFlightId());
-//            classFlightManages.forEach(System.out::println);
-            Optional<ClassFlightManage> pt = classFlightManages.stream().filter(c ->
-                    c.getClassType().equals(ClassType.PHO_THONG)).findFirst();
-            Optional<ClassFlightManage> pt_db = classFlightManages.stream().filter(c ->
-                    c.getClassType().equals(ClassType.PHO_THONG_DAC_BIET)).findFirst();
-            Optional<ClassFlightManage> tg = classFlightManages.stream().filter(c ->
-                    c.getClassType().equals(ClassType.THUONG_GIA)).findFirst();
-            Optional<ClassFlightManage> hn = classFlightManages.stream().filter(c ->
-                    c.getClassType().equals(ClassType.HANG_NHAT)).findFirst();
-            FlightItem flightItem = new FlightItem(
-                    flight.getName(), flight.getAirlineId(), flight.getDeparture(),
-                    flight.getDeparturePlace(), flight.getDestination(), flight.getTime(), flight.getGateId(),
-                    flight.getQuantityTicket(), flight.getTimeDeparture(), flight.getTimeArrival(),
-                    pt.get().getPrice(), pt.get().getQuantity(),
-                    pt_db.get().getPrice(), pt_db.get().getQuantity(),
-                    tg.get().getPrice(), tg.get().getQuantity(), hn.get().getPrice(), hn.get().getQuantity());
-            result.add(flightItem);
+                    .findByFlightId(item.getFlightId());
+            ResultFlight resultFlight = new ResultFlight(item.getName(), item.getFlightCode(),
+                    new SimpleDateFormat("yyyy-MM-dd").format(item.getDeparture()), item.getGateId(), item.getQuantityTicket(),
+                    item.getTimeDeparture(), item.getTimeArrival(), classFlightManages
+                    );
+            result.add(resultFlight);
         });
+        System.out.println(result);
         return Response.ok(result);
     }
 

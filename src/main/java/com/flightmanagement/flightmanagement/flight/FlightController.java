@@ -20,9 +20,9 @@ public class FlightController {
     @Autowired
     private ClassFlightService classFlightService;
 
-    @GetMapping
-    public Response getAll() {
-        return flightService.getAll();
+    @GetMapping("/airline/{airlineCode}")
+    public Response getAll(@PathVariable String airlineCode) {
+        return flightService.getAll(airlineCode);
     }
 
     @GetMapping("/find")
@@ -64,7 +64,7 @@ public class FlightController {
 
     @GetMapping("/classTypes")
     public Response getClassTypeByFlightCode(@RequestParam int flightId) {
-        return classFlightService.findByFlightCode(flightId);
+        return classFlightService.findByFlightId(flightId);
     }
 
     @PostMapping("/create")
