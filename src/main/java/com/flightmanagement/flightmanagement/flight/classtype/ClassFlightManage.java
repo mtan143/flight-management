@@ -17,11 +17,11 @@ import java.util.Date;
 @Table("tbl_ClassType")
 public class ClassFlightManage implements Persistable {
 
-    public ClassFlightManage(ClassType classType,
+    public ClassFlightManage(ClassType classType,String classFlightCode,
                              int price, int quantity, int remainingQuantity, Status status, int flightId,
                              String createdBy, Date createdDate, String lastUpdateBy, Date lastUpdateDate) {
         this.classType = classType;
-        this.classFlightCode = generateFlightCode();
+        this.classFlightCode = classFlightCode;
         this.price = price;
         this.quantity = quantity;
         this.remainingQuantity = remainingQuantity;
@@ -31,20 +31,6 @@ public class ClassFlightManage implements Persistable {
         this.createdDate = createdDate;
         this.lastUpdateBy = lastUpdateBy;
         this.lastUpdateDate = lastUpdateDate;
-    }
-
-    private String generateFlightCode() {
-        return String.format("%04d", flightId)
-                .concat(changeClassType(classType))
-                .concat(String.format("%04d", classFlightId));
-    }
-    private String changeClassType(ClassType classType) {
-        switch (classType) {
-            case PHO_THONG: return "PTXX";
-            case PHO_THONG_DAC_BIET: return "PTDB";
-            case THUONG_GIA: return "TGXX";
-            default: return "HNXX";
-        }
     }
 
     @Id

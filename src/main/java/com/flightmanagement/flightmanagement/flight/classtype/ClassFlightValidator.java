@@ -22,11 +22,11 @@ public class ClassFlightValidator {
         }
 
         //call api to get barem price (min, max)
-        int min = 0, max = 0;
-        if (classFlight.getPrice() < min && classFlight.getPrice() > max) {
-            log.info("Execute this method got error due to price out of barem");
-            throw new BusinessException(ClassFlightError.PRICE_INVALID);
-        }
+//        int min = 0, max = 0;
+//        if (classFlight.getPrice() < min && classFlight.getPrice() > max) {
+//            log.info("Execute this method got error due to price out of barem");
+//            throw new BusinessException(ClassFlightError.PRICE_INVALID);
+//        }
 
         if (classFlight.getRemainingQuantity() > classFlight.getQuantity()) {
             log.info("Execute this method got error due to invalid quantity");

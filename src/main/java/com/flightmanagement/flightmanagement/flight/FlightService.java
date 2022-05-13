@@ -215,35 +215,53 @@ public class FlightService {
                            int pt_dbQuantity, int tgPrice, int tgQuantity, int hnPrice, int hnQuantity)
             throws ParseException {
 
-        Flight flight = new Flight(name, airlineId, FlightStatus.Khoi_Tao,
+        String flight_code = String.format("%04d", airlineId)
+                .concat(timeDeparture.substring(0, 2))
+                .concat(timeDeparture.substring(3, 5))
+                .concat(departure.substring(8, 10))
+                .concat(departure.substring(5, 7))
+                .concat(departure.substring(2, 4))
+                .concat(parsePlace(departurePlace))
+                .concat(parsePlace(destination));
+
+        Flight flight = new Flight(flight_code, name, airlineId, FlightStatus.Khoi_Tao,
                 new SimpleDateFormat("yyyy-MM-dd").parse(departure),
                 ptQuantity + pt_dbQuantity + tgQuantity + hnQuantity,
                 departurePlace, destination,
                 time, timeDeparture, timeArrival, gateId, Status.ACTIVE, "ADMIN", Date.from(Instant.now()),
                 "ADMIN", Date.from(Instant.now()));
-
         flight.setNew(true);
         FlightValidator.validate(flight);
         flightRepository.save(flight);
 
+        Integer flightId = getFlightIdByFlightCode(flight_code);
+
+        String ptCode = String.format("%04d", flightId)
+                .concat(changeClassType(ClassType.PHO_THONG));
+        String pt_dbCode = String.format("%04d", flightId)
+                .concat(changeClassType(ClassType.PHO_THONG_DAC_BIET));
+        String tgCode = String.format("%04d", flightId)
+                .concat(changeClassType(ClassType.THUONG_GIA));
+        String hnCode = String.format("%04d", flightId)
+                .concat(changeClassType(ClassType.HANG_NHAT));
 
         ClassFlightManage ptClass = new ClassFlightManage(
-                ClassType.PHO_THONG, ptPrice, ptQuantity, ptQuantity, Status.ACTIVE,
+                ClassType.PHO_THONG, ptCode, ptPrice, ptQuantity, ptQuantity, Status.ACTIVE,
                 flight.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
                 Date.from(Instant.now()));
 
         ClassFlightManage pt_dbClass = new ClassFlightManage(
-                ClassType.PHO_THONG_DAC_BIET, pt_dbPrice, pt_dbQuantity, pt_dbQuantity, Status.ACTIVE,
+                ClassType.PHO_THONG_DAC_BIET, pt_dbCode, pt_dbPrice, pt_dbQuantity, pt_dbQuantity, Status.ACTIVE,
                 flight.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
                 Date.from(Instant.now()));
 
         ClassFlightManage tgClass = new ClassFlightManage(
-                ClassType.THUONG_GIA, tgPrice, tgQuantity, tgQuantity, Status.ACTIVE,
+                ClassType.THUONG_GIA, tgCode, tgPrice, tgQuantity, tgQuantity, Status.ACTIVE,
                 flight.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
                 Date.from(Instant.now()));
 
         ClassFlightManage hnClass = new ClassFlightManage(
-                ClassType.HANG_NHAT, hnPrice, hnQuantity, hnQuantity, Status.ACTIVE,
+                ClassType.HANG_NHAT, hnCode, hnPrice, hnQuantity, hnQuantity, Status.ACTIVE,
                 flight.getFlightId(), "ADMIN", Date.from(Instant.now()), "ADMIN",
                 Date.from(Instant.now()));
 
@@ -272,6 +290,29 @@ public class FlightService {
         classFlightRepository.save(hnClass);
 
         return Response.ok("Create successfully!");
+    }
+
+    public String parsePlace (String place) {
+        switch (place.substring(0, place.length() - 10)) {
+            case "Đà Nẵng": return "DAD";
+            case "Hà Nội": return "HAN";
+            case "Đà Lạt": return "DLI";
+            case "Nha Trang": return "CXR";
+            case "Phú Quốc": return "PQC";
+            case "Huế": return "HUI";
+            case "Vinh": return "VII";
+            default: return "SGN";
+
+        }
+    }
+
+    private String changeClassType(ClassType classType) {
+        switch (classType) {
+            case PHO_THONG: return "PTXX";
+            case PHO_THONG_DAC_BIET: return "PTDB";
+            case THUONG_GIA: return "TGXX";
+            default: return "HNXX";
+        }
     }
 
     /**
@@ -311,5 +352,8 @@ public class FlightService {
     }
 
 
+    public Integer getFlightIdByFlightCode(String flightCode) {
+        return flightRepository.getFlightIdByFlightCode(flightCode);
+    }
 
 }

@@ -11,15 +11,15 @@ public class FlightValidator {
 
     public void validate (Flight flight) {
 
-        if (Objects.isNull(flight)) {
-            log.info("Execute this method got error due to empty flight");
-            throw new BusinessException(FlightError.FLIGHT_INVALID);
-        }
-
-        if (flight.getFlightCode().isEmpty()) {
-            log.info("Execute this method got error due to empty flight code");
-            throw new BusinessException(FlightError.FLIGHT_CODE_EMPTY);
-        }
+//        if (Objects.isNull(flight)) {
+//            log.info("Execute this method got error due to empty flight");
+//            throw new BusinessException(FlightError.FLIGHT_INVALID);
+//        }
+//
+//        if (flight.getFlightCode().isEmpty()) {
+//            log.info("Execute this method got error due to empty flight code");
+//            throw new BusinessException(FlightError.FLIGHT_CODE_EMPTY);
+//        }
 
         if (flight.getAirlineId() < 0) {
             log.info("Execute this method got error due to empty airline id");

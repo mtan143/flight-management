@@ -25,9 +25,9 @@ public interface FlightRepository extends CrudRepository<Flight, Integer> {
         "join tbl_Airline as l on a.airlineId=l.airlineId " +
         "where a.departurePlace=:departurePlace " +
         "and a.destination=:destination " +
-        "or c.classType=:classType " +
+        "and c.classType=:classType " +
         "and c.remainingQuantity>:quantity " +
-        "or a.departure=:departure")
+        "and a.departure=:departure")
     List<SearchObject> searchFlight(@Param("departurePlace") String departurePlace,
                                     @Param("destination") String destination,
                                     @Param("quantity") int quantity,
@@ -47,6 +47,9 @@ public interface FlightRepository extends CrudRepository<Flight, Integer> {
 
     @Query("select * from tbl_Flight where tbl_Flight.status='ACTIVE'")
     List<Flight> getActiveFlight();
+
+    @Query("select f.flightId from tbl_Flight as f where f.flightCode=:flightCode")
+    Integer getFlightIdByFlightCode(String flightCode);
 
 
 }

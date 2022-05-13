@@ -69,7 +69,7 @@ public class FlightController {
 
     @PostMapping("/create")
     public Response create(@RequestBody FlightItem flightItem) throws ParseException {
-//        System.out.println(flightItem);
+        System.out.println(flightItem);
         return flightService.create(flightItem.getName(),
                 flightItem.getAirlineId(), new SimpleDateFormat("yyyy-MM-dd").format(flightItem.getDeparture()), flightItem.getDeparturePlace(),
                 flightItem.getDestination(), flightItem.getTime(), flightItem.getGateId(),
