@@ -17,6 +17,7 @@ public class ResultFlight {
     private int quantityTicket;
     private String timeDeparture;
     private String timeArrival;
+    private FlightStatus flightStatus;
 
     private List<ClassFlightManage> classTypeList;
 

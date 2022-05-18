@@ -8,6 +8,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Data
@@ -17,8 +18,27 @@ import java.util.Date;
 @Table("tbl_Ticket")
 public class Ticket implements Persistable {
 
+    public Ticket(String ticketCode, int classFlightId, Integer userId, String firstName, String lastName, String phoneNumber, String email, int totalPrice, String voucherCode, String giftCode) {
+        this.ticketCode = ticketCode;
+        this.classFlightId = classFlightId;
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.totalPrice = totalPrice;
+        this.voucherCode = voucherCode == null ? "" : voucherCode;
+        this.giftCode = giftCode == null ? "" : giftCode;
+        this.status = Status.ACTIVE;
+        this.ticketStatus = TicketStatus.Tao;
+        this.createdBy = "ADMIN";
+        this.createdDate = Date.from(Instant.now());
+        this.lastUpdateBy = "ADMIN";
+        this.lastUpdateDate = Date.from(Instant.now());
+        this.setNew(true);
+    }
+
     @Id
-    @Generated
     @Column("ticketId")
     private Integer ticketId;
 
@@ -54,6 +74,9 @@ public class Ticket implements Persistable {
 
     @Column("voucherCode")
     private String voucherCode;
+
+    @Column("giftCode")
+    private String giftCode;
 
 
 

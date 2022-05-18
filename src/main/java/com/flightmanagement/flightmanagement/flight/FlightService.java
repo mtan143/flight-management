@@ -43,7 +43,7 @@ public class FlightService {
                     .findByFlightId(item.getFlightId());
             ResultFlight resultFlight = new ResultFlight(item.getName(), item.getFlightCode(),
                     new SimpleDateFormat("yyyy-MM-dd").format(item.getDeparture()), item.getGateId(), item.getQuantityTicket(),
-                    item.getTimeDeparture(), item.getTimeArrival(), classFlightManages
+                    item.getTimeDeparture(), item.getTimeArrival(), item.getFlightStatus(),classFlightManages
                     );
             result.add(resultFlight);
         });
@@ -203,16 +203,9 @@ public class FlightService {
                            int pt_dbQuantity, int tgPrice, int tgQuantity, int hnPrice, int hnQuantity)
             throws ParseException {
 
-        String flight_code = String.format("%04d", airlineId)
-                .concat(timeDeparture.substring(0, 2))
-                .concat(timeDeparture.substring(3, 5))
-                .concat(departure.substring(8, 10))
-                .concat(departure.substring(5, 7))
-                .concat(departure.substring(2, 4))
-                .concat(parsePlace(departurePlace))
-                .concat(parsePlace(destination));
 
-        Flight flight = new Flight(flight_code, name, airlineId, FlightStatus.Khoi_Tao,
+
+        Flight flight = new Flight("newFlight", name, airlineId, FlightStatus.Khoi_Tao,
                 new SimpleDateFormat("yyyy-MM-dd").parse(departure),
                 ptQuantity + pt_dbQuantity + tgQuantity + hnQuantity,
                 departurePlace, destination,
@@ -221,8 +214,17 @@ public class FlightService {
         flight.setNew(true);
         FlightValidator.validate(flight);
         flightRepository.save(flight);
+        Integer flightId = getFlightIdByFlightCode("newFlight");
+        Flight newFlight = flightRepository.findBy("newFlight");
+        String flight_code = parsePlace(departurePlace)
+                .concat(parsePlace(destination))
+                .concat(String.format("%04d", airlineId))
+                .concat(String.format("%04d", flightId));
+        newFlight.setFlightCode(flight_code);
+        flightRepository.save(newFlight);
 
-        Integer flightId = getFlightIdByFlightCode(flight_code);
+
+
 
         String ptCode = String.format("%04d", flightId)
                 .concat(changeClassType(ClassType.PHO_THONG));
@@ -342,6 +344,14 @@ public class FlightService {
 
     public Integer getFlightIdByFlightCode(String flightCode) {
         return flightRepository.getFlightIdByFlightCode(flightCode);
+    }
+
+    public Response updateFlightStatus(String flightCode, FlightStatus flightStatus) {
+
+        Flight flight = flightRepository.findBy(flightCode);
+        flight.setFlightStatus(flightStatus);
+        flightRepository.save(flight);
+        return Response.ok(flightCode);
     }
 
 }

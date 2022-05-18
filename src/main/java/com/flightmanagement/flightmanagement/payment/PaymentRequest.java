@@ -3,7 +3,7 @@ package com.flightmanagement.flightmanagement.payment;
 public class PaymentRequest {
 
     public enum Currency{
-        INR,USD;
+        INR, USD, VND;
     }
     private String description;
     private int amount;

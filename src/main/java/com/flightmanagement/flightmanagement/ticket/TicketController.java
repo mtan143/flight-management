@@ -56,4 +56,9 @@ public class TicketController {
     public Response getPriceTransaction(@PathVariable Integer userId) {
         return ticketService.getPriceTransaction(userId);
     }
+
+    @PostMapping("/create")
+    public Response create(@RequestBody TicketItem item) {
+        return ticketService.create(item);
+    }
 }

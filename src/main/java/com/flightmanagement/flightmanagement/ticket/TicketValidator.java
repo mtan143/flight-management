@@ -46,6 +46,10 @@ public class TicketValidator {
             log.info("Execute this method got error due to empty email");
             throw new BusinessException(TicketError.EMAIL_INVALID);
         }
+        if (ticket.getTotalPrice() <= 0) {
+            log.info("Execute this method got error due to invalid price");
+            throw new BusinessException(TicketError.PRICE_INVALID);
+        }
 
     }
 

@@ -84,4 +84,8 @@ public class FlightController {
         return flightService.getActiveFlight();
     }
 
+    @PostMapping("/status")
+    public Response updateFlightStatus(@RequestBody UpdateStatusObject item) {
+        return flightService.updateFlightStatus(item.getFlightCode(), item.getFlightStatus());
+    }
 }

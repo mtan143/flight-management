@@ -1,5 +1,5 @@
 package com.flightmanagement.flightmanagement.flight;
 
 public enum FlightStatus {
-    Khoi_Tao, Ha_Canh, Cat_Canh, Huy, Dang_Bay
+    Khoi_Tao, Ha_Canh, Cat_Canh, Huy, Delay,Archive
 }

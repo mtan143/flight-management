@@ -2,9 +2,10 @@ package com.flightmanagement.flightmanagement.ticket;
 
 import com.flightmanagement.flightmanagement.common.Response;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
-import com.flightmanagement.flightmanagement.flight.FlightRepository;
 import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightService;
 import com.flightmanagement.flightmanagement.passenger.Passenger;
+import com.flightmanagement.flightmanagement.passenger.PassengerRepository;
+import com.flightmanagement.flightmanagement.passenger.PassengerValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class TicketService {
     @Autowired
     private ClassFlightService classFlightService;
 
+    @Autowired
+    private PassengerRepository passengerRepository;
 
     /**
      * Get all ticket data from database
@@ -172,8 +175,31 @@ public class TicketService {
 //
 //    }
 
-//    public Response create(InfoContact infoContact, List<Passenger> passengers) {
-//
-//    }
+    public Response create(TicketItem ticketItem) {
+
+        Ticket ticket = new Ticket("newFlight", ticketItem.getClassFlightId(), ticketItem.getUserId(), ticketItem.getFirstName(),
+                ticketItem.getLastName(), ticketItem.getPhoneNumber(), ticketItem.getEmail(), ticketItem.getTotalPrice(),
+                ticketItem.getVoucherCode(), ticketItem.getGiftCode());
+        TicketValidator.validate(ticket);
+        ticketRepository.save(ticket);
+
+        Ticket tk = ticketRepository.findBy("newFlight");
+        String code = ticketRepository.getAirlineCodeByClassFlightId(ticket.getClassFlightId()).substring(8, 12)
+                        .concat(String.format("%04d", ticketItem.getClassFlightId()))
+                        .concat(String.format("%04d", tk.getTicketId()));
+        tk.setTicketCode(code);
+        ticketRepository.save(tk);
+
+        ticketItem.getPassengers().forEach(p -> {
+            Passenger passenger = new Passenger(tk.getTicketId(), p.getAppellation(), p.getFirstName(),
+                    p.getLastName(), p.getDateOfBirth(), p.getNationality());
+            System.out.println(passenger);
+            PassengerValidator.validate(passenger);
+            passengerRepository.save(passenger);
+        });
+
+
+        return Response.ok();
+    }
 
 }

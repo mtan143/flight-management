@@ -57,6 +57,7 @@ public class PassengerService {
         log.info("Execute save method from Passenger Service");
 
         PassengerValidator.validate(passenger);
+        passenger.setNew(true);
         passenger.setStatus(ACTIVE);
         passenger.setCreatedBy("SYSTEM");
         passenger.setLastUpdateBy("SYSTEM");

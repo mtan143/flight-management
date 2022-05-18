@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public enum PassengerError implements BaseError {
     PASSENGER_INVALID("PASSENGER_INVALID", "Passenger is invalid"),
-    TICKET_CODE_INVALID("TICKET_CODE_INVALID", "Ticket code is invalid"),
+    TICKET_ID_INVALID("TICKET_ID_INVALID", "Ticket id is invalid"),
     FIRSTNAME_EMPTY("FIRSTNAME_EMPTY", "First name is required!"),
     LASTNAME_EMPTY("LASTNAME_EMPTY", "Last name is required!"),
     PASSENGER_NOT_EXIST("PASSENGER_NOT_EXIST", "Passenger is not existing");

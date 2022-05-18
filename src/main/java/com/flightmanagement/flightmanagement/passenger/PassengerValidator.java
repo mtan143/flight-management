@@ -1,6 +1,5 @@
 package com.flightmanagement.flightmanagement.passenger;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
-import com.flightmanagement.flightmanagement.flight.Flight;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,8 +17,8 @@ public class PassengerValidator {
         }
 
         if (passenger.getTicketId() < 0) {
-            log.info("Execute this method got error due to empty ticket code");
-            throw new BusinessException(PassengerError.TICKET_CODE_INVALID);
+            log.info("Execute this method got error due to empty ticket id");
+            throw new BusinessException(PassengerError.TICKET_ID_INVALID);
         }
 
         if (passenger.getFirstName().isEmpty()) {

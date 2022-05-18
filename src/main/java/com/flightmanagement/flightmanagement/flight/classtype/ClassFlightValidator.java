@@ -33,7 +33,10 @@ public class ClassFlightValidator {
             throw new BusinessException(ClassFlightError.QUANTITY_INVALID);
         }
 
-
+        if (classFlight.getPrice() < 300000 || classFlight.getPrice() > 3000000) {
+            log.info("Execute this method got error due to invalid price");
+            throw new BusinessException(ClassFlightError.PRICE_INVALID);
+        }
 
     }
 

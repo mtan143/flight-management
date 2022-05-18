@@ -26,5 +26,11 @@ public interface TicketRepository extends CrudRepository<Ticket, Integer> {
     @Query("select t.totalPrice from tbl_Ticket as t where t.userId=:userId")
     int getPriceTransaction(@Param("userId") Integer userId);
 
+    @Query("select a.airlineCode from tbl_Airline as a " +
+            "join tbl_Flight f on a.airlineId=f.airlineId " +
+            "join tbl_ClassType c on f.flightId=c.flightId " +
+            "where c.classFlightId=:classFlightId")
+    String getAirlineCodeByClassFlightId(int classFlightId);
+
 
 }
