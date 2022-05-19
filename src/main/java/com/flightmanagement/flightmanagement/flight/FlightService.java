@@ -31,8 +31,8 @@ public class FlightService {
      * Get all flight data from database
      * @return
      */
-    public Response getAll(String airlineCode) {
-        log.info("Get all flight from database...");
+    public List<ResultFlight> getAll(String airlineCode) {
+        log.info("Get all flight by airlineCode from database...");
 
         List<ResultFlight> result = new ArrayList<>();
 
@@ -48,7 +48,7 @@ public class FlightService {
             result.add(resultFlight);
         });
         System.out.println(result);
-        return Response.ok(result);
+        return result;
     }
 
     /**
@@ -352,6 +352,16 @@ public class FlightService {
         flight.setFlightStatus(flightStatus);
         flightRepository.save(flight);
         return Response.ok(flightCode);
+    }
+
+    public Response statisticFlight(String airlineCode) {
+
+        List<ResultFlight> list = this.getAll(airlineCode);
+
+        Map<String, List<ResultFlight>> res = list.stream().collect(Collectors.groupingBy(ResultFlight::getYearDeparture));
+
+        return Response.ok(res);
+
     }
 
 }

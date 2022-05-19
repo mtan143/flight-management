@@ -22,7 +22,7 @@ public class FlightController {
 
     @GetMapping("/airline/{airlineCode}")
     public Response getAll(@PathVariable String airlineCode) {
-        return flightService.getAll(airlineCode);
+        return Response.ok(flightService.getAll(airlineCode));
     }
 
     @GetMapping("/find")
@@ -87,5 +87,10 @@ public class FlightController {
     @PostMapping("/status")
     public Response updateFlightStatus(@RequestBody UpdateStatusObject item) {
         return flightService.updateFlightStatus(item.getFlightCode(), item.getFlightStatus());
+    }
+
+    @GetMapping("/airline/statistic/{airlineCode}")
+    public Response statisticFlight(@PathVariable String airlineCode) {
+        return flightService.statisticFlight(airlineCode);
     }
 }

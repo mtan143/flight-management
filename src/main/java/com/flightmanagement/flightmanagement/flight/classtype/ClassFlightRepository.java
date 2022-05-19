@@ -12,8 +12,8 @@ public interface ClassFlightRepository extends CrudRepository<ClassFlightManage,
 
     @Query("select count(*) from tbl_Ticket as t " +
             "inner join tbl_ClassType as c on t.classFlightId=:classFlightId " +
-            "where t.ticketStatus='Dat_Dat'")
-    int closedTicket(@Param("classFlightId") int classFlightId);
+            "where t.ticketStatus='Tao'")
+    int createdTicket(@Param("classFlightId") int classFlightId);
 
     @Query("select * from tbl_ClassType as c where c.classFlightCode=:classFlightCode")
     ClassFlightManage findByCode(@Param("classFlightCode") String classFlightCode);

@@ -2,6 +2,9 @@ package com.flightmanagement.flightmanagement.ticket;
 
 import com.flightmanagement.flightmanagement.common.Response;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
+import com.flightmanagement.flightmanagement.flight.Flight;
+import com.flightmanagement.flightmanagement.flight.FlightService;
+import com.flightmanagement.flightmanagement.flight.ResultFlight;
 import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightService;
 import com.flightmanagement.flightmanagement.passenger.Passenger;
 import com.flightmanagement.flightmanagement.passenger.PassengerRepository;
@@ -11,9 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.flightmanagement.flightmanagement.ticket.Status.ACTIVE;
 import static com.flightmanagement.flightmanagement.ticket.Status.DISABLED;
@@ -24,6 +26,7 @@ public class TicketService {
 
     @Autowired
     private TicketRepository ticketRepository;
+
     @Autowired
     private ClassFlightService classFlightService;
 
@@ -182,6 +185,7 @@ public class TicketService {
                 ticketItem.getVoucherCode(), ticketItem.getGiftCode());
         TicketValidator.validate(ticket);
         ticketRepository.save(ticket);
+        classFlightService.updateRemainingTicket(ticketItem.getClassFlightId());
 
         Ticket tk = ticketRepository.findBy("newFlight");
         String code = ticketRepository.getAirlineCodeByClassFlightId(ticket.getClassFlightId()).substring(8, 12)
@@ -197,6 +201,7 @@ public class TicketService {
             PassengerValidator.validate(passenger);
             passengerRepository.save(passenger);
         });
+
 
 
         return Response.ok();

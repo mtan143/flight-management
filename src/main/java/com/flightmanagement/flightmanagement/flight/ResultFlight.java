@@ -20,5 +20,7 @@ public class ResultFlight {
     private FlightStatus flightStatus;
 
     private List<ClassFlightManage> classTypeList;
-
+    public String getYearDeparture() {
+        return departure.substring(0, 4);
+    }
 }

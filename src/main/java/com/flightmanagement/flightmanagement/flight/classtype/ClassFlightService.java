@@ -80,9 +80,9 @@ public class ClassFlightService {
      * @param classFlightId
      */
     public void updateRemainingTicket(int classFlightId) {
-        int orderedTicket = classFlightRepository.closedTicket(classFlightId);
+        int createdTicket = classFlightRepository.createdTicket(classFlightId);
         ClassFlightManage classFlightManage = classFlightRepository.findById(classFlightId).get();
-        classFlightManage.setRemainingQuantity(classFlightManage.getQuantity() - orderedTicket);
+        classFlightManage.setRemainingQuantity(classFlightManage.getQuantity() - createdTicket);
         classFlightRepository.save(classFlightManage);
     }
 
