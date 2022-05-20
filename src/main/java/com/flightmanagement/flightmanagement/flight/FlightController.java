@@ -93,4 +93,15 @@ public class FlightController {
     public Response statisticFlight(@PathVariable String airlineCode) {
         return flightService.statisticFlight(airlineCode);
     }
+
+    @GetMapping("/airline/statistic/month/{airlineCode}")
+    public Response statisticFlightByMonth(@PathVariable String airlineCode) {
+        return flightService.statisticFlightByMonth(airlineCode);
+    }
+
+
+    @GetMapping("/airline/statistic/classtype/{airlineCode}")
+    public Response statisticFlightByClassType(@PathVariable String airlineCode) {
+        return flightService.statisticFlightByClassType(airlineCode);
+    }
 }

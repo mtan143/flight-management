@@ -29,7 +29,7 @@ public class PaymentService {
      * @return
      * @throws StripeException
      */
-    public PaymentRequest charge(PaymentRequest chargeRequest) throws StripeException {
+    public ChargeResponse charge(PaymentRequest chargeRequest) throws StripeException {
         Map<String, Object> chargeParams = new HashMap<>();
         chargeParams.put("amount", chargeRequest.getAmount());
         chargeParams.put("currency", PaymentRequest.Currency.VND);
@@ -37,8 +37,9 @@ public class PaymentService {
         chargeParams.put("description", chargeRequest.getDescription());
 
         Charge charge = Charge.create(chargeParams);
-        return new PaymentRequest(charge.getDescription(), charge.getAmount().intValue(),
-                PaymentRequest.Currency.VND, charge.getReceiptEmail(), chargeRequest.getToken());
+//        return new PaymentRequest(charge.getDescription(), charge.getAmount().intValue(),
+//                PaymentRequest.Currency.VND, charge.getReceiptEmail(), chargeRequest.getToken());
+        return new ChargeResponse(charge.getBillingDetails().getName(), charge.getId(), charge.getAmount().intValue());
     }
 
     /**
@@ -48,10 +49,11 @@ public class PaymentService {
      * @throws StripeException
      */
     public Refund refund(String chargeId) throws StripeException {
+        System.out.println(chargeId);
         RefundCreateParams params =
-                RefundCreateParams.builder().setCharge(chargeId).build();
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("charge", chargeId);
+                RefundCreateParams.builder()
+                        .setCharge(chargeId)
+                        .build();
         Refund rf = Refund.create(params);
         System.out.println(rf.getStatus());
         return rf;

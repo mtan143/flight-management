@@ -8,7 +8,7 @@ import lombok.Data;
 public class PaymentRequest {
 
     public enum Currency{
-        INR, USD, VND
+         VND
     }
     private String description;
     private int amount;

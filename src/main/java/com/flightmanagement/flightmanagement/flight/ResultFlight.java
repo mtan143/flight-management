@@ -23,4 +23,9 @@ public class ResultFlight {
     public String getYearDeparture() {
         return departure.substring(0, 4);
     }
+
+    public String getMonthDeparture() {
+        return departure.substring(0, 7);
+    }
+
 }

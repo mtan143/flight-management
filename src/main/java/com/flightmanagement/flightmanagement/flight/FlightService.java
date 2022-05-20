@@ -408,17 +408,82 @@ public class FlightService {
         List<ResultFlight> list = this.getAll(airlineCode);
         Map<String, List<ResultFlight>> res = list.stream().collect(Collectors.groupingBy(ResultFlight::getYearDeparture));
         List<StatisticObject> result = new ArrayList<>();
+
         res.forEach((k, v) -> {
             AtomicInteger total = new AtomicInteger();
-            v.forEach(item -> {
-                item.getClassTypeList().forEach(cl -> {
-                    total.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
-                });
-            });
+            v.forEach(item -> item.getClassTypeList().forEach(cl -> {
+                total.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
+            }));
             result.add(new StatisticObject(k, total.get()));
         });
+
         return Response.ok(result);
 
+    }
+
+    /**
+     * Statistic flight of airline by month
+     * @param airlineCode
+     * @return
+     */
+    public Response statisticFlightByMonth(String airlineCode) {
+
+        List<ResultFlight> list = this.getAll(airlineCode);
+        Map<String, List<ResultFlight>> res = list.stream().collect(Collectors.groupingBy(ResultFlight::getMonthDeparture));
+        List<StatisticObject> result = new ArrayList<>();
+
+        res.forEach((k, v) -> {
+            AtomicInteger total = new AtomicInteger();
+            v.forEach(item -> item.getClassTypeList().forEach(cl -> {
+                total.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
+            }));
+            result.add(new StatisticObject(k, total.get()));
+        });
+
+        return Response.ok(result);
+    }
+
+    /**
+     * Statistic flight of airline by class type
+     * @param airlineCode
+     * @return
+     */
+    public Response statisticFlightByClassType(String airlineCode) {
+
+        List<ResultFlight> list = this.getAll(airlineCode);
+        Map<String, List<ResultFlight>> res = list.stream().collect(Collectors.groupingBy(ResultFlight::getYearDeparture));
+
+        List<Map<String, String>> result = new ArrayList<>();
+
+        res.forEach((k, v) -> {
+            Map<String, String> obj = new HashMap<>();
+
+            obj.put("year", k);
+            AtomicInteger pt = new AtomicInteger();
+            AtomicInteger tg = new AtomicInteger();
+            AtomicInteger pt_db = new AtomicInteger();
+            AtomicInteger hn = new AtomicInteger();
+
+            v.forEach(item -> item.getClassTypeList().forEach(cl -> {
+                switch (cl.getClassType()) {
+                    case PHO_THONG:
+                        pt.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
+                    case HANG_NHAT:
+                        hn.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
+                    case THUONG_GIA:
+                        tg.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
+                    default:
+                        pt_db.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
+                }
+            }));
+            obj.put("pt", pt.toString());
+            obj.put("pt_db", pt_db.toString());
+            obj.put("tg", tg.toString());
+            obj.put("hn", hn.toString());
+            result.add(obj);
+        });
+
+        return Response.ok(result);
     }
 
 }
