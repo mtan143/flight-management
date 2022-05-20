@@ -5,6 +5,8 @@ import com.flightmanagement.flightmanagement.exception.BusinessException;
 import com.flightmanagement.flightmanagement.flight.Flight;
 import com.flightmanagement.flightmanagement.flight.FlightService;
 import com.flightmanagement.flightmanagement.flight.ResultFlight;
+import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightManage;
+import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightRepository;
 import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightService;
 import com.flightmanagement.flightmanagement.passenger.Passenger;
 import com.flightmanagement.flightmanagement.passenger.PassengerRepository;
@@ -32,6 +34,9 @@ public class TicketService {
 
     @Autowired
     private PassengerRepository passengerRepository;
+
+    @Autowired
+    private ClassFlightRepository classFlightRepository;
 
     /**
      * Get all ticket data from database
@@ -115,27 +120,6 @@ public class TicketService {
     }
 
     /**
-     * Delete ticket by id
-     * @param id
-     * @return
-     */
-    public Response delete(Integer id) {
-        log.info("Execute delete method from Ticket Service");
-
-        Ticket existingTicket = ticketRepository.findById(id).get();
-
-        if (Objects.isNull(existingTicket))
-            throw new BusinessException(TicketError.TICKET_NOT_EXIST);
-
-        existingTicket.setStatus(DISABLED);
-        existingTicket.setLastUpdateBy("ADMIN");
-        existingTicket.setLastUpdateDate(Date.from(Instant.now()));
-
-        ticketRepository.save(existingTicket);
-        return Response.ok("Deleted ticket object: " + existingTicket.getTicketCode());
-    }
-
-    /**
      * Get ticket by id
      * @param id
      * @return
@@ -178,6 +162,11 @@ public class TicketService {
 //
 //    }
 
+    /**
+     * Create new ticket item
+     * @param ticketItem
+     * @return
+     */
     public Response create(TicketItem ticketItem) {
 
         Ticket ticket = new Ticket("newFlight", ticketItem.getClassFlightId(), ticketItem.getUserId(), ticketItem.getFirstName(),
@@ -185,7 +174,9 @@ public class TicketService {
                 ticketItem.getVoucherCode(), ticketItem.getGiftCode());
         TicketValidator.validate(ticket);
         ticketRepository.save(ticket);
-        classFlightService.updateRemainingTicket(ticketItem.getClassFlightId());
+        ClassFlightManage classType = classFlightRepository.findById(ticket.getClassFlightId()).get();
+        classType.setRemainingQuantity(classType.getRemainingQuantity() - ticketItem.getPassengers().size());
+        classFlightRepository.save(classType);
 
         Ticket tk = ticketRepository.findBy("newFlight");
         String code = ticketRepository.getAirlineCodeByClassFlightId(ticket.getClassFlightId()).substring(8, 12)
@@ -204,7 +195,7 @@ public class TicketService {
 
 
 
-        return Response.ok();
+        return Response.ok(tk.getTicketCode());
     }
 
 }

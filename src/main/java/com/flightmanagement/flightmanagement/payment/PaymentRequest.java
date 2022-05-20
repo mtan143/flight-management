@@ -1,47 +1,19 @@
 package com.flightmanagement.flightmanagement.payment;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
 public class PaymentRequest {
 
     public enum Currency{
-        INR, USD, VND;
+        INR, USD, VND
     }
     private String description;
     private int amount;
     private Currency currency;
     private String stripeEmail;
     private Token token;
-
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public int getAmount() {
-        return amount;
-    }
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-    public Currency getCurrency() {
-        return currency;
-    }
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
-    }
-    public String getStripeEmail() {
-        return stripeEmail;
-    }
-    public void setStripeEmail(String stripeEmail) {
-        this.stripeEmail = stripeEmail;
-    }
-    public Token getToken() {
-        return token;
-    }
-    public void setToken(Token stripeToken) {
-        this.token = stripeToken;
-    }
-
-
 
 }

@@ -1,15 +1,9 @@
 package com.flightmanagement.flightmanagement.flight.classtype;
 
-import com.flightmanagement.flightmanagement.airline.AirlineValidator;
 import com.flightmanagement.flightmanagement.common.Response;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
-import com.flightmanagement.flightmanagement.flight.Flight;
-import com.flightmanagement.flightmanagement.flight.FlightError;
-import com.flightmanagement.flightmanagement.flight.FlightValidator;
-import com.flightmanagement.flightmanagement.flight.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

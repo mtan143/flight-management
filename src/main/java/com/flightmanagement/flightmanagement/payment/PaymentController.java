@@ -1,6 +1,10 @@
 package com.flightmanagement.flightmanagement.payment;
 
+import com.flightmanagement.flightmanagement.common.Response;
+import com.flightmanagement.flightmanagement.exception.BusinessException;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
+import com.stripe.model.Refund;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,18 +18,19 @@ public class PaymentController {
     PaymentService service;
 
     @PostMapping
-    public ResponseEntity<String> completePayment(@RequestBody PaymentRequest request) throws StripeException {
-        String chargeId = service.charge(request);
-        return chargeId != null ? new ResponseEntity<>(chargeId, HttpStatus.OK)
-                : new ResponseEntity<>("Please check the credit card details entered", HttpStatus.BAD_REQUEST);
+    public Response completePayment(@RequestBody PaymentRequest request) throws StripeException {
+        PaymentRequest charge = service.charge(request);
+        return charge != null ? Response.ok(charge)
+                : Response.failed(new BusinessException(PaymentError.PAYMENT_INVALID));
     }
 
     @PostMapping("/refund")
-    public ResponseEntity<String> refund(@RequestBody String chargeId) throws StripeException {
+    public Response refund(@RequestBody String chargeId) throws StripeException {
 
-        String refund = service.refund(chargeId);
-        return refund != null ? new ResponseEntity<>(refund, HttpStatus.OK)
-                : new ResponseEntity<>("Please check the credit card details entered", HttpStatus.BAD_REQUEST);
+        Refund refund = service.refund(chargeId);
+
+        return refund != null ? Response.ok(refund)
+                : Response.failed(new BusinessException(PaymentError.REFUND_INVALID));
     }
 
     @ExceptionHandler

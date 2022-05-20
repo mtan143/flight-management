@@ -11,11 +11,9 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 @Service
 @Slf4j
@@ -28,7 +26,7 @@ public class FlightService {
     private ClassFlightRepository classFlightRepository;
 
     /**
-     * Get all flight data from database
+     * Get all flight data of specify airline from database
      * @return
      */
     public List<ResultFlight> getAll(String airlineCode) {
@@ -52,7 +50,7 @@ public class FlightService {
     }
 
     /**
-     * Get airline by code
+     * Get flight by code
      * @param flightCode
      */
     public Response findByCode(String flightCode) {
@@ -197,6 +195,29 @@ public class FlightService {
                 : Response.ok(flights);
     }
 
+
+    /**
+     * Create new Flight Item
+     * @param name
+     * @param airlineId
+     * @param departure
+     * @param departurePlace
+     * @param destination
+     * @param time
+     * @param gateId
+     * @param timeDeparture
+     * @param timeArrival
+     * @param ptPrice
+     * @param ptQuantity
+     * @param pt_dbPrice
+     * @param pt_dbQuantity
+     * @param tgPrice
+     * @param tgQuantity
+     * @param hnPrice
+     * @param hnQuantity
+     * @return
+     * @throws ParseException
+     */
     public Response create(String name, int airlineId, String departure, String departurePlace,
                            String destination, int time, String gateId, String timeDeparture,
                            String timeArrival, int ptPrice, int ptQuantity, int pt_dbPrice,
@@ -282,6 +303,11 @@ public class FlightService {
         return Response.ok("Create successfully!");
     }
 
+    /**
+     * Parse location code
+     * @param place
+     * @return
+     */
     public String parsePlace (String place) {
         switch (place.substring(0, place.length() - 10)) {
             case "Đà Nẵng": return "DAD";
@@ -296,6 +322,11 @@ public class FlightService {
         }
     }
 
+    /**
+     * Parse class type code
+     * @param classType
+     * @return
+     */
     private String changeClassType(ClassType classType) {
         switch (classType) {
             case PHO_THONG: return "PTXX";
@@ -342,10 +373,22 @@ public class FlightService {
     }
 
 
+    /**
+     * Retrieve flight id from flight code
+     * @param flightCode
+     * @return
+     */
     public Integer getFlightIdByFlightCode(String flightCode) {
         return flightRepository.getFlightIdByFlightCode(flightCode);
     }
 
+
+    /**
+     * Update flight status
+     * @param flightCode
+     * @param flightStatus
+     * @return
+     */
     public Response updateFlightStatus(String flightCode, FlightStatus flightStatus) {
 
         Flight flight = flightRepository.findBy(flightCode);
@@ -354,13 +397,27 @@ public class FlightService {
         return Response.ok(flightCode);
     }
 
+
+    /**
+     * Statistic flight of airline
+     * @param airlineCode
+     * @return
+     */
     public Response statisticFlight(String airlineCode) {
 
         List<ResultFlight> list = this.getAll(airlineCode);
-
         Map<String, List<ResultFlight>> res = list.stream().collect(Collectors.groupingBy(ResultFlight::getYearDeparture));
-
-        return Response.ok(res);
+        List<StatisticObject> result = new ArrayList<>();
+        res.forEach((k, v) -> {
+            AtomicInteger total = new AtomicInteger();
+            v.forEach(item -> {
+                item.getClassTypeList().forEach(cl -> {
+                    total.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
+                });
+            });
+            result.add(new StatisticObject(k, total.get()));
+        });
+        return Response.ok(result);
 
     }
 

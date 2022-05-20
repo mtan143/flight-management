@@ -32,10 +32,10 @@ public class TicketController {
         return ticketService.save(ticket, id);
     }
 
-    @DeleteMapping("/{id}")
-    public Response delete(@PathVariable Integer id) {
-        return ticketService.delete(id);
-    }
+//    @DeleteMapping("/{id}")
+//    public Response delete(@PathVariable Integer id) {
+//        return ticketService.delete(id);
+//    }
 
     @GetMapping("/{id}")
     public Response get(@PathVariable Integer id) {

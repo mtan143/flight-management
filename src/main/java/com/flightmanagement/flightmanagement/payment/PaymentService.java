@@ -23,21 +23,37 @@ public class PaymentService {
         Stripe.apiKey = secretKey;
     }
 
-    public String charge(PaymentRequest chargeRequest) throws StripeException {
+    /**
+     * Logic for charge payment
+     * @param chargeRequest
+     * @return
+     * @throws StripeException
+     */
+    public PaymentRequest charge(PaymentRequest chargeRequest) throws StripeException {
         Map<String, Object> chargeParams = new HashMap<>();
         chargeParams.put("amount", chargeRequest.getAmount());
         chargeParams.put("currency", PaymentRequest.Currency.VND);
         chargeParams.put("source", chargeRequest.getToken().getId());
+        chargeParams.put("description", chargeRequest.getDescription());
 
         Charge charge = Charge.create(chargeParams);
-        return charge.getPaymentIntent();
+        return new PaymentRequest(charge.getDescription(), charge.getAmount().intValue(),
+                PaymentRequest.Currency.VND, charge.getReceiptEmail(), chargeRequest.getToken());
     }
 
-    public String refund(String chargeId) throws StripeException {
+    /**
+     * Logic for refund Stripe
+     * @param chargeId
+     * @return
+     * @throws StripeException
+     */
+    public Refund refund(String chargeId) throws StripeException {
         RefundCreateParams params =
                 RefundCreateParams.builder().setCharge(chargeId).build();
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("charge", chargeId);
         Refund rf = Refund.create(params);
         System.out.println(rf.getStatus());
-        return rf.getStatus();
+        return rf;
     }
 }
