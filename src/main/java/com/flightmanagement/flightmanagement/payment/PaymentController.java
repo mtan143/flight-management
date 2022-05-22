@@ -4,6 +4,7 @@ import com.flightmanagement.flightmanagement.common.Response;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Refund;
+import com.stripe.model.issuing.Cardholder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +23,20 @@ public class PaymentController {
     }
 
     @PostMapping("/refund")
-    public Response refund(@RequestBody String chargeId) throws StripeException {
+    public Response refund(@RequestParam String chargeId) throws StripeException {
 
         Refund refund = service.refund(chargeId);
 
         return refund != null ? Response.ok(refund)
                 : Response.failed(new BusinessException(PaymentError.REFUND_INVALID));
+    }
+
+
+    @PostMapping("/create")
+    public Response create(@RequestBody CardHolder cardHolder) throws StripeException {
+        Cardholder cardholder = service.create(cardHolder);
+        return cardholder != null ? Response.ok(cardholder)
+                : Response.failed(new BusinessException(PaymentError.TRANSACTION_INVALID));
     }
 
     @ExceptionHandler

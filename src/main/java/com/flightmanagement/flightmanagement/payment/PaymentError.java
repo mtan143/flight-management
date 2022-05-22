@@ -10,6 +10,7 @@ import lombok.ToString;
 @ToString
 public enum PaymentError implements BaseError {
     PAYMENT_INVALID("PAYMENT_INVALID", "Please check the credit card details entered"),
+    TRANSACTION_INVALID("TRANSACTION_INVALID", "Please check your information"),
     REFUND_INVALID("REFUND_INVALID", "Refund Failed");
 
     private String code;

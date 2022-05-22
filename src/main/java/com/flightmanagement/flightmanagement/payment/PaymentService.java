@@ -4,7 +4,9 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Refund;
+import com.stripe.model.issuing.Cardholder;
 import com.stripe.param.RefundCreateParams;
+import com.stripe.param.issuing.CardholderCreateParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -50,12 +52,34 @@ public class PaymentService {
      */
     public Refund refund(String chargeId) throws StripeException {
         System.out.println(chargeId);
-        RefundCreateParams params =
-                RefundCreateParams.builder()
-                        .setCharge(chargeId)
-                        .build();
+        RefundCreateParams params = new RefundCreateParams.Builder().setCharge(chargeId).build();
         Refund rf = Refund.create(params);
         System.out.println(rf.getStatus());
         return rf;
+    }
+
+
+    public Cardholder create(CardHolder cardholder) throws StripeException {
+        CardholderCreateParams params =
+                CardholderCreateParams.builder()
+                        .setName(cardholder.getName())
+                        .setEmail(cardholder.getEmail())
+                        .setPhoneNumber(cardholder.getPhoneNumber())
+                        .setStatus(cardholder.getStatus())
+                        .setType(cardholder.getType())
+                        .setBilling(
+                                CardholderCreateParams.Billing.builder()
+                                        .setAddress(
+                                                CardholderCreateParams.Billing.Address.builder()
+                                                        .setLine1(cardholder.getLine())
+                                                        .setCity(cardholder.getCity())
+                                                        .setState(cardholder.getState())
+                                                        .setPostalCode(cardholder.getPostalCode())
+                                                        .setCountry(cardholder.getCountry())
+                                                        .build())
+                                        .build())
+                        .build();
+
+        return Cardholder.create(params);
     }
 }
