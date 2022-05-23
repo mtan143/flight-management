@@ -1,5 +1,6 @@
 package com.flightmanagement.flightmanagement.ticket;
 
+import com.flightmanagement.flightmanagement.flight.Flight;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -33,4 +34,33 @@ public interface TicketRepository extends CrudRepository<Ticket, Integer> {
     String getAirlineCodeByClassFlightId(int classFlightId);
 
 
+    @Query("select f.name " +
+            "from tbl_Flight as f " +
+            "inner join tbl_ClassType as c on f.flightId=c.flightId " +
+            "inner join tbl_Ticket as t on c.classFlightId=t.classFlightId " +
+            "where t.ticketId=:ticketId")
+    String getFlightNameByTicketId(Integer ticketId);
+
+
+    @Query("select f.timeDeparture " +
+            "from tbl_Flight as f " +
+            "inner join tbl_ClassType as c on f.flightId=c.flightId " +
+            "inner join tbl_Ticket as t on c.classFlightId=t.classFlightId " +
+            "where t.ticketId=:ticketId")
+    String getTimeDepartureByTicketId(Integer ticketId);
+
+    @Query("select f.timeArrival " +
+            "from tbl_Flight as f " +
+            "inner join tbl_ClassType as c on f.flightId=c.flightId " +
+            "inner join tbl_Ticket as t on c.classFlightId=t.classFlightId " +
+            "where t.ticketId=:ticketId")
+    String getTimeArrivalByTicketId(Integer ticketId);
+
+    @Query("select a.name " +
+            "from tbl_Airline as a " +
+            "inner join tbl_Flight as f on a.airlineId=f.airlineId " +
+            "inner join tbl_ClassType as c on f.flightId=c.flightId " +
+            "inner join tbl_Ticket as t on c.classFlightId=t.classFlightId " +
+            "where t.ticketId=:ticketId")
+    String getAirlineNameByTicketId(Integer ticketId);
 }

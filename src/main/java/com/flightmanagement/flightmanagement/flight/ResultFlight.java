@@ -28,4 +28,6 @@ public class ResultFlight {
         return departure.substring(0, 7);
     }
 
+    public String getMonth() {return departure.substring(5, 7);}
+
 }

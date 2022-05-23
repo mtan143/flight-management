@@ -417,7 +417,8 @@ public class FlightService {
             result.add(new StatisticObject(k, total.get()));
         });
 
-        return Response.ok(result);
+        return Response.ok(result.stream().sorted(Comparator
+                .comparing(x -> Integer.parseInt(x.getYear()))).collect(Collectors.toList()));
 
     }
 
@@ -434,13 +435,16 @@ public class FlightService {
 
         res.forEach((k, v) -> {
             AtomicInteger total = new AtomicInteger();
-            v.forEach(item -> item.getClassTypeList().forEach(cl -> {
+            v.stream().sorted(Comparator.comparing(a -> a.getDeparture().substring(5, 7))).forEach(item -> item.getClassTypeList().forEach(cl -> {
                 total.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
             }));
             result.add(new StatisticObject(k, total.get()));
         });
 
-        return Response.ok(result);
+        List<StatisticObject> collect = result.stream().sorted(Comparator
+                .comparing(a -> a.getYear().substring(5, 7))).collect(Collectors.toList());
+
+        return Response.ok(collect);
     }
 
     /**
@@ -468,12 +472,16 @@ public class FlightService {
                 switch (cl.getClassType()) {
                     case PHO_THONG:
                         pt.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
+                        break;
                     case HANG_NHAT:
                         hn.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
+                        break;
                     case THUONG_GIA:
                         tg.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
-                    default:
+                        break;
+                    case PHO_THONG_DAC_BIET:
                         pt_db.addAndGet(cl.getPrice() * (cl.getQuantity() - cl.getRemainingQuantity()));
+                        break;
                 }
             }));
             obj.put("pt", pt.toString());

@@ -32,10 +32,11 @@ public class PaymentController {
     }
 
 
-    @PostMapping("/create")
-    public Response create(@RequestBody CardHolder cardHolder) throws StripeException {
-        Cardholder cardholder = service.create(cardHolder);
-        return cardholder != null ? Response.ok(cardholder)
+    @PostMapping("/accounts/create")
+    public Response createAccount() throws StripeException {
+
+        String account = service.createAccount();
+        return account != null ? Response.ok(account)
                 : Response.failed(new BusinessException(PaymentError.TRANSACTION_INVALID));
     }
 

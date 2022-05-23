@@ -8,19 +8,23 @@ import com.flightmanagement.flightmanagement.flight.ResultFlight;
 import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightManage;
 import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightRepository;
 import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightService;
+import com.flightmanagement.flightmanagement.mail.MailService;
 import com.flightmanagement.flightmanagement.passenger.Passenger;
 import com.flightmanagement.flightmanagement.passenger.PassengerRepository;
 import com.flightmanagement.flightmanagement.passenger.PassengerValidator;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.flightmanagement.flightmanagement.ticket.Status.ACTIVE;
 import static com.flightmanagement.flightmanagement.ticket.Status.DISABLED;
+import static com.flightmanagement.flightmanagement.ticket.TicketStatus.Da_Dat;
 
 @Service
 @Slf4j
@@ -37,6 +41,9 @@ public class TicketService {
 
     @Autowired
     private ClassFlightRepository classFlightRepository;
+
+    @Autowired
+    private MailService mailService;
 
     /**
      * Get all ticket data from database
@@ -70,7 +77,7 @@ public class TicketService {
 
         TicketValidator.validate(ticket);
         ticket.setStatus(ACTIVE);
-        ticket.setTicketStatus(TicketStatus.Da_Dat);
+        ticket.setTicketStatus(Da_Dat);
         ticket.setCreatedBy("SYSTEM");
         ticket.setLastUpdateBy("SYSTEM");
         ticket.setCreatedDate(Date.from(Instant.now()));
@@ -183,6 +190,7 @@ public class TicketService {
                         .concat(String.format("%04d", ticketItem.getClassFlightId()))
                         .concat(String.format("%04d", tk.getTicketId()));
         tk.setTicketCode(code);
+        tk.setTicketStatus(Da_Dat);
         ticketRepository.save(tk);
 
         ticketItem.getPassengers().forEach(p -> {
@@ -196,6 +204,48 @@ public class TicketService {
 
 
         return Response.ok(tk.getTicketCode());
+    }
+
+    public String getFlightNameByTicketId(Integer ticketId) {
+
+        String flight = ticketRepository.getFlightNameByTicketId(ticketId);
+        return flight.isEmpty() ? "" : flight;
+    }
+
+    public String getTimeDepartureByTicketId(Integer ticketId) {
+
+        String flight = ticketRepository.getTimeDepartureByTicketId(ticketId);
+        return flight.isEmpty() ? "" : flight;
+    }
+
+    public String getTimeArrivalByTicketId(Integer ticketId) {
+
+        String flight = ticketRepository.getTimeArrivalByTicketId(ticketId);
+        return flight.isEmpty() ? "" : flight;
+    }
+
+    public String getAirlineNameByTicketId(Integer ticketId) {
+
+        String airlineName = ticketRepository.getAirlineNameByTicketId(ticketId);
+        return airlineName.isEmpty() ? "" : airlineName;
+    }
+
+
+    public Response sendEmail() throws MessagingException {
+
+        Ticket ticket = ticketRepository.findBy("CDVN00010016");
+        if (ticket == null) return Response.failed(new BusinessException(TicketError.TICKET_NOT_EXIST));
+
+        try {
+            mailService.confirmTicket(ticket.getFirstName().concat(" ").concat(ticket.getLastName()),
+                    this.getFlightNameByTicketId(ticket.getTicketId()), ticket.getTicketCode(),
+                    this.getTimeDepartureByTicketId(ticket.getTicketId()), getTimeArrivalByTicketId(ticket.getTicketId()),
+                    getAirlineNameByTicketId(ticket.getTicketId()), ticket.getTotalPrice());
+        } catch (MessagingException e) {
+            return Response.failed(new BusinessException("404", e.getMessage()));
+        }
+
+        return Response.ok("Check your mail!");
     }
 
 }
