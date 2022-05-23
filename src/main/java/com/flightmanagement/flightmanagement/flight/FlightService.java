@@ -491,7 +491,8 @@ public class FlightService {
             result.add(obj);
         });
 
-        return Response.ok(result);
+        return Response.ok(result.stream().sorted(Comparator
+                .comparing(x -> Integer.parseInt(x.get("year")))).collect(Collectors.toList()));
     }
 
 }
