@@ -18,7 +18,7 @@ import java.util.Date;
 @Table("tbl_Ticket")
 public class Ticket implements Persistable {
 
-    public Ticket(String ticketCode, int classFlightId, Integer userId, String firstName, String lastName, String phoneNumber, String email, int totalPrice, String voucherCode, String giftCode, String chargeId) {
+    public Ticket(String ticketCode, int classFlightId, String userId, String firstName, String lastName, String phoneNumber, String email, int totalPrice, String voucherCode, String giftCode, String chargeId) {
         this.ticketCode = ticketCode;
         this.classFlightId = classFlightId;
         this.userId = userId;
@@ -50,7 +50,7 @@ public class Ticket implements Persistable {
     private int classFlightId;
 
     @Column("userId")
-    private Integer userId;
+    private String userId;
 
     @Column("firstName")
     private String firstName;

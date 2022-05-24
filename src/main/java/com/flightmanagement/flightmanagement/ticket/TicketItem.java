@@ -11,7 +11,7 @@ public class TicketItem {
 
     private String classFlightCode;
 
-    private Integer userId;
+    private String userId;
 
     private String firstName;
 
