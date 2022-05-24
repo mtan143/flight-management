@@ -17,6 +17,7 @@ public enum TicketError implements BaseError {
     PHONE_NUMBER_INVALID("PHONE_NUMBER_INVALID", "Phone number is invalid!"),
     EMAIL_INVALID("EMAIL_INVALID", "Email is required!"),
     PRICE_INVALID("PRICE_INVALID", "Price is invalid!"),
+    CHARGE_NOT_EXIST("CHARGE_NOT_EXIST", "Ticket was not check out"),
     TICKET_NOT_EXIST("TICKET_NOT_EXIST", "Ticket is not existing");
 
     private String code;

@@ -18,7 +18,7 @@ import java.util.Date;
 @Table("tbl_Ticket")
 public class Ticket implements Persistable {
 
-    public Ticket(String ticketCode, int classFlightId, Integer userId, String firstName, String lastName, String phoneNumber, String email, int totalPrice, String voucherCode, String giftCode) {
+    public Ticket(String ticketCode, int classFlightId, Integer userId, String firstName, String lastName, String phoneNumber, String email, int totalPrice, String voucherCode, String giftCode, String chargeId) {
         this.ticketCode = ticketCode;
         this.classFlightId = classFlightId;
         this.userId = userId;
@@ -35,6 +35,7 @@ public class Ticket implements Persistable {
         this.createdDate = Date.from(Instant.now());
         this.lastUpdateBy = "ADMIN";
         this.lastUpdateDate = Date.from(Instant.now());
+        this.chargeId = chargeId;
         this.setNew(true);
     }
 
@@ -77,6 +78,9 @@ public class Ticket implements Persistable {
 
     @Column("giftCode")
     private String giftCode;
+
+    @Column("chargeId")
+    private String chargeId;
 
 
 

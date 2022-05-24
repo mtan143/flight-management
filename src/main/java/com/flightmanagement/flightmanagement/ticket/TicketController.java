@@ -4,6 +4,8 @@ import com.flightmanagement.flightmanagement.common.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+
 @RestController
 @RequestMapping("/customers/tickets")
 @CrossOrigin
@@ -61,4 +63,9 @@ public class TicketController {
     public Response create(@RequestBody TicketItem item) {
         return ticketService.create(item);
     }
+
+//    @GetMapping("/info")
+//    public Response sendEmail() {
+//        return ticketService.sendEmail();
+//    }
 }

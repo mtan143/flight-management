@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class TicketItem {
 
-    private int classFlightId;
+    private String classFlightCode;
 
     private Integer userId;
 
@@ -30,6 +30,8 @@ public class TicketItem {
     private String voucherCode;
 
     private String giftCode;
+
+    private String chargeId;
 
     private List<Passenger> passengers;
 }

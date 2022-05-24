@@ -176,18 +176,26 @@ public class TicketService {
      */
     public Response create(TicketItem ticketItem) {
 
-        Ticket ticket = new Ticket("newFlight", ticketItem.getClassFlightId(), ticketItem.getUserId(), ticketItem.getFirstName(),
+        int classFlightId = classFlightRepository.findByCode(ticketItem.getClassFlightCode());
+
+        Ticket ticket = new Ticket("newFlight", classFlightId, ticketItem.getUserId(), ticketItem.getFirstName(),
                 ticketItem.getLastName(), ticketItem.getPhoneNumber(), ticketItem.getEmail(), ticketItem.getTotalPrice(),
-                ticketItem.getVoucherCode(), ticketItem.getGiftCode());
+                ticketItem.getVoucherCode(), ticketItem.getGiftCode(), ticketItem.getChargeId());
+
+
         TicketValidator.validate(ticket);
+
         ticketRepository.save(ticket);
+
         ClassFlightManage classType = classFlightRepository.findById(ticket.getClassFlightId()).get();
         classType.setRemainingQuantity(classType.getRemainingQuantity() - ticketItem.getPassengers().size());
         classFlightRepository.save(classType);
 
         Ticket tk = ticketRepository.findBy("newFlight");
+
+        //create flight code
         String code = ticketRepository.getAirlineCodeByClassFlightId(ticket.getClassFlightId()).substring(8, 12)
-                        .concat(String.format("%04d", ticketItem.getClassFlightId()))
+                        .concat(String.format("%04d", classFlightId))
                         .concat(String.format("%04d", tk.getTicketId()));
         tk.setTicketCode(code);
         tk.setTicketStatus(Da_Dat);
@@ -201,9 +209,9 @@ public class TicketService {
             passengerRepository.save(passenger);
         });
 
+        sendEmail(code);
 
-
-        return Response.ok(tk.getTicketCode());
+        return Response.ok(tk.getTicketCode().isEmpty() ? "" : tk.getTicketCode());
     }
 
     public String getFlightNameByTicketId(Integer ticketId) {
@@ -231,21 +239,19 @@ public class TicketService {
     }
 
 
-    public Response sendEmail() throws MessagingException {
+    public void sendEmail(String ticketCode) {
 
-        Ticket ticket = ticketRepository.findBy("CDVN00010016");
-        if (ticket == null) return Response.failed(new BusinessException(TicketError.TICKET_NOT_EXIST));
+        Ticket ticket = ticketRepository.findBy(ticketCode);
+        if (ticket == null) throw new  BusinessException(TicketError.TICKET_NOT_EXIST);
 
         try {
             mailService.confirmTicket(ticket.getFirstName().concat(" ").concat(ticket.getLastName()),
                     this.getFlightNameByTicketId(ticket.getTicketId()), ticket.getTicketCode(),
                     this.getTimeDepartureByTicketId(ticket.getTicketId()), getTimeArrivalByTicketId(ticket.getTicketId()),
-                    getAirlineNameByTicketId(ticket.getTicketId()), ticket.getTotalPrice());
+                    getAirlineNameByTicketId(ticket.getTicketId()), ticket.getTotalPrice(), ticket.getEmail());
         } catch (MessagingException e) {
-            return Response.failed(new BusinessException("404", e.getMessage()));
+            throw new  BusinessException("404", e.getMessage());
         }
-
-        return Response.ok("Check your mail!");
     }
 
 }

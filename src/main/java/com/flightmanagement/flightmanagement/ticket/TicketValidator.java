@@ -22,6 +22,11 @@ public class TicketValidator {
             throw new BusinessException(TicketError.TICKET_CODE_INVALID);
         }
 
+        if (ticket.getChargeId().isEmpty()) {
+            log.info("Execute this method got error due to empty ticket code");
+            throw new BusinessException(TicketError.CHARGE_NOT_EXIST);
+        }
+
         if (ticket.getClassFlightId() < 0) {
             log.info("Execute this method got error due to invalid class flight code");
             throw new BusinessException(TicketError.CLASS_FLIGHT_INVALID);

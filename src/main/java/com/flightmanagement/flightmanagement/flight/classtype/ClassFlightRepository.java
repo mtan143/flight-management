@@ -16,8 +16,8 @@ public interface ClassFlightRepository extends CrudRepository<ClassFlightManage,
             "where t.ticketStatus='Tao'")
     int createdTicket(@Param("classFlightId") int classFlightId);
 
-    @Query("select * from tbl_ClassType as c where c.classFlightCode=:classFlightCode")
-    ClassFlightManage findByCode(@Param("classFlightCode") String classFlightCode);
+    @Query("select c.classFlightId from tbl_ClassType as c where c.classFlightCode=:classFlightCode")
+    int findByCode(@Param("classFlightCode") String classFlightCode);
 
     @Query("select * from tbl_ClassType as c where c.flightId=:flightId")
     List<ClassFlightManage> findByFlightId(@Param("flightId") int flightId);
