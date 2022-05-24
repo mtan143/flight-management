@@ -63,4 +63,7 @@ public interface TicketRepository extends CrudRepository<Ticket, Integer> {
             "inner join tbl_Ticket as t on c.classFlightId=t.classFlightId " +
             "where t.ticketId=:ticketId")
     String getAirlineNameByTicketId(Integer ticketId);
+
+    @Query("select * from tbl_Ticket as t where t.userId=:userId")
+    List<Ticket> findByUserId(String userId);
 }

@@ -254,4 +254,9 @@ public class TicketService {
         }
     }
 
+
+    public List<Ticket> findByUserId(String userId) {
+        return ticketRepository.findByUserId(userId);
+    }
+
 }

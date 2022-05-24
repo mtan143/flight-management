@@ -34,20 +34,11 @@ public class TicketController {
         return ticketService.save(ticket, id);
     }
 
-//    @DeleteMapping("/{id}")
-//    public Response delete(@PathVariable Integer id) {
-//        return ticketService.delete(id);
-//    }
-
     @GetMapping("/{id}")
     public Response get(@PathVariable Integer id) {
         return ticketService.get(id);
     }
 
-//    @GetMapping("/history")
-//    public Response historyTransaction(@RequestBody String email) {
-//        return ticketService.historyTransaction(email);
-//    }
 
     @GetMapping("/flights")
     public Response getByFlightCode(@RequestParam String flightCode) {
@@ -64,8 +55,9 @@ public class TicketController {
         return ticketService.create(item);
     }
 
-//    @GetMapping("/info")
-//    public Response sendEmail() {
-//        return ticketService.sendEmail();
-//    }
+
+    @GetMapping("/transaction")
+    public Response transactionHistory(@RequestParam String userId) {
+        return Response.ok(ticketService.findByUserId(userId));
+    }
 }
