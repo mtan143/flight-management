@@ -1,6 +1,7 @@
 package com.flightmanagement.flightmanagement.ticket;
 
 import com.flightmanagement.flightmanagement.common.Response;
+import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,5 +60,10 @@ public class TicketController {
     @GetMapping("/transaction")
     public Response transactionHistory(@RequestParam String userId) {
         return Response.ok(ticketService.findByUserId(userId));
+    }
+
+    @GetMapping("/cancel")
+    public Response cancelTicket(@RequestParam Integer ticketId) throws StripeException {
+        return ticketService.cancelTicket(ticketId);
     }
 }

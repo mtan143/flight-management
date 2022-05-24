@@ -1,5 +1,5 @@
 package com.flightmanagement.flightmanagement.ticket;
 
 public enum TicketStatus {
-    Tao, Da_Dat, Da_Dung
+    Tao, Da_Dat, Da_Dung, Da_Huy
 }

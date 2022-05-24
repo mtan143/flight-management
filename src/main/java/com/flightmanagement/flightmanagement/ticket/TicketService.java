@@ -12,6 +12,10 @@ import com.flightmanagement.flightmanagement.mail.MailService;
 import com.flightmanagement.flightmanagement.passenger.Passenger;
 import com.flightmanagement.flightmanagement.passenger.PassengerRepository;
 import com.flightmanagement.flightmanagement.passenger.PassengerValidator;
+import com.flightmanagement.flightmanagement.payment.PaymentError;
+import com.flightmanagement.flightmanagement.payment.PaymentService;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Refund;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,7 @@ import java.util.stream.Collectors;
 import static com.flightmanagement.flightmanagement.ticket.Status.ACTIVE;
 import static com.flightmanagement.flightmanagement.ticket.Status.DISABLED;
 import static com.flightmanagement.flightmanagement.ticket.TicketStatus.Da_Dat;
+import static com.flightmanagement.flightmanagement.ticket.TicketStatus.Da_Huy;
 
 @Service
 @Slf4j
@@ -44,6 +49,9 @@ public class TicketService {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private PaymentService paymentService;
 
     /**
      * Get all ticket data from database
@@ -161,13 +169,21 @@ public class TicketService {
         return Response.ok(ticketRepository.getPriceTransaction(userId));
     }
 
-//    public Response cancelTicket() {
-//
-//    }
 
-//    public Response refund() {
-//
-//    }
+    public Response cancelTicket(Integer ticketId) throws StripeException {
+        Ticket ticket = ticketRepository.findById(ticketId).get();
+
+        if (ticket == null) throw new BusinessException(TicketError.TICKET_NOT_EXIST);
+
+        Refund refund = paymentService.refund(ticket.getChargeId());
+
+        ticket.setTicketStatus(Da_Huy);
+        ticketRepository.save(ticket);
+
+        return refund != null ? Response.ok(refund)
+                : Response.failed(new BusinessException(PaymentError.REFUND_INVALID));
+    }
+
 
     /**
      * Create new ticket item
