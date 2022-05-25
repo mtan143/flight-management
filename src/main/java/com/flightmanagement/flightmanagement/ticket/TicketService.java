@@ -175,14 +175,12 @@ public class TicketService {
 
         if (ticket == null) throw new BusinessException(TicketError.TICKET_NOT_EXIST);
 
-        Refund refund = paymentService.refund(ticket.getChargeId());
+        paymentService.refund(ticket.getChargeId());
 
         ticket.setTicketStatus(Da_Huy);
         ticketRepository.save(ticket);
 
-//        return refund != null ? Response.ok(refund)
-//                : Response.failed(new BusinessException(PaymentError.REFUND_INVALID));
-        return Response.ok(refund);
+        return Response.ok("Refund Success");
     }
 
 

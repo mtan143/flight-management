@@ -25,10 +25,9 @@ public class PaymentController {
     @PostMapping("/refund")
     public Response refund(@RequestParam String chargeId) throws StripeException {
 
-        Refund refund = service.refund(chargeId);
+        service.refund(chargeId);
 
-        return refund != null ? Response.ok(refund)
-                : Response.failed(new BusinessException(PaymentError.REFUND_INVALID));
+        return Response.ok("Refund Success");
     }
 
 

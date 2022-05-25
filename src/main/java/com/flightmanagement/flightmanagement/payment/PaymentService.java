@@ -52,12 +52,11 @@ public class PaymentService {
      * @return
      * @throws StripeException
      */
-    public Refund refund(String chargeId) throws StripeException {
+    public void refund(String chargeId) throws StripeException {
         System.out.println(chargeId);
         RefundCreateParams params = new RefundCreateParams.Builder().setCharge(chargeId).build();
         Refund rf = Refund.create(params);
         System.out.println(rf.getStatus());
-        return rf;
     }
 
     public String createAccount() throws StripeException {
