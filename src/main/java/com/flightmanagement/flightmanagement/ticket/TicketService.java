@@ -180,8 +180,9 @@ public class TicketService {
         ticket.setTicketStatus(Da_Huy);
         ticketRepository.save(ticket);
 
-        return refund != null ? Response.ok(refund)
-                : Response.failed(new BusinessException(PaymentError.REFUND_INVALID));
+//        return refund != null ? Response.ok(refund)
+//                : Response.failed(new BusinessException(PaymentError.REFUND_INVALID));
+        return Response.ok(refund);
     }
 
 
@@ -273,6 +274,10 @@ public class TicketService {
 
     public List<Ticket> findByUserId(String userId) {
         return ticketRepository.findByUserId(userId);
+    }
+
+    public Date getDepartureByTicketId(Integer ticketId) {
+        return ticketRepository.getDepartureByTicketId(ticketId);
     }
 
 }

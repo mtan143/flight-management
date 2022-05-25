@@ -62,8 +62,13 @@ public class TicketController {
         return Response.ok(ticketService.findByUserId(userId));
     }
 
-    @GetMapping("/cancel")
-    public Response cancelTicket(@RequestParam Integer ticketId) throws StripeException {
+    @GetMapping("/cancel/{ticketId}")
+    public Response cancelTicket(@PathVariable Integer ticketId) throws StripeException {
         return ticketService.cancelTicket(ticketId);
+    }
+
+    @GetMapping("/departure/{ticketId}")
+    public Response getDepartureByTicketId(@PathVariable Integer ticketId) {
+        return Response.ok(ticketService.getDepartureByTicketId(ticketId));
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -66,4 +67,11 @@ public interface TicketRepository extends CrudRepository<Ticket, Integer> {
 
     @Query("select * from tbl_Ticket as t where t.userId=:userId")
     List<Ticket> findByUserId(String userId);
+
+    @Query("select f.departure " +
+            "from tbl_Ticket as t " +
+            "inner join tbl_ClassType as c on t.classFlightId=c.classFLightId " +
+            "inner join tbl_FLight as f on c.flightId=f.flightId " +
+            "where t.ticketId=:ticketId")
+    Date getDepartureByTicketId(Integer ticketId);
 }
