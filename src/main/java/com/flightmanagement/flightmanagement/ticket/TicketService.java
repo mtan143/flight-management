@@ -282,4 +282,8 @@ public class TicketService {
         return ticketRepository.getDepartureByTicketId(ticketId);
     }
 
+    public List<Ticket> getTicketByAirlineCode(String airlineCode) {
+        return ticketRepository.getTicketByAirlineCode(airlineCode).stream()
+                .sorted(Comparator.comparing(Ticket::getCreatedDate)).collect(Collectors.toList());
+    }
 }

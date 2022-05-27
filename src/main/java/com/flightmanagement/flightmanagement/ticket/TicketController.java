@@ -72,9 +72,14 @@ public class TicketController {
         return Response.ok(ticketService.getDepartureByTicketId(ticketId));
     }
 
-    @GetMapping("/email")
-    public Response sendEmail() {
-        ticketService.sendEmail("CDVN00050024");
-        return Response.ok();
+//    @GetMapping("/email")
+//    public Response sendEmail() {
+//        ticketService.sendEmail("CDVN00050024");
+//        return Response.ok();
+//    }
+
+    @GetMapping("/transaction-partner/{airlineCode}")
+    public Response getTicketByAirlineCode(@PathVariable String airlineCode) {
+        return Response.ok(ticketService.getTicketByAirlineCode(airlineCode));
     }
 }
