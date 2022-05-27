@@ -74,4 +74,9 @@ public interface TicketRepository extends CrudRepository<Ticket, Integer> {
             "inner join tbl_FLight as f on c.flightId=f.flightId " +
             "where t.ticketId=:ticketId")
     Date getDepartureByTicketId(Integer ticketId);
+
+    @Query("select count (*) " +
+            "from tbl_Passenger " +
+            "where tbl_Passenger.ticketId=:ticketId")
+    int getPassengersCount(Integer ticketId);
 }

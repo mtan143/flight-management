@@ -70,19 +70,21 @@ public class FlightController {
     @PostMapping("/create")
     public Response create(@RequestBody FlightItem flightItem) throws ParseException {
         System.out.println(flightItem);
+        int stdQ = flightItem.getStdQuantity();
+        int stdP = flightItem.getStdPrice();
         return flightService.create(flightItem.getName(),
                 flightItem.getAirlineId(), new SimpleDateFormat("yyyy-MM-dd").format(flightItem.getDeparture()), flightItem.getDeparturePlace(),
                 flightItem.getDestination(), flightItem.getTime(), flightItem.getGateId(),
                 flightItem.getTimeDeparture(), flightItem.getTimeArrival(),
-                flightItem.getPtPrice(), flightItem.getPtQuantity(),
-                flightItem.getPt_dbPrice(), flightItem.getPt_dbQuantity(),
-                flightItem.getTgPrice(), flightItem.getTgQuantity(), flightItem.getHnPrice(),
-                flightItem.getHnQuantity());
+                stdP, stdQ + 150,
+                stdP + 100000, stdQ + 100,
+                stdP + 200000, stdQ + 50,
+                stdP + 500000, stdQ);
     }
-    @GetMapping("/active")
-    public Response getActiveFlight() {
-        return flightService.getActiveFlight();
-    }
+//    @GetMapping("/active")
+//    public Response getActiveFlight() {
+//        return flightService.getActiveFlight();
+//    }
 
     @PostMapping("/status")
     public Response updateFlightStatus(@RequestBody UpdateStatusObject item) {

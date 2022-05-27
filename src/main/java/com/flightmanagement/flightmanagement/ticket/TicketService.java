@@ -178,9 +178,13 @@ public class TicketService {
         paymentService.refund(ticket.getChargeId());
 
         ticket.setTicketStatus(Da_Huy);
+
+        ClassFlightManage classType = classFlightRepository.findById(ticket.getClassFlightId()).get();
+        classType.setRemainingQuantity(classType.getRemainingQuantity() + ticketRepository.getPassengersCount(ticketId));
+        classFlightRepository.save(classType);
         ticketRepository.save(ticket);
 
-        return Response.ok("Refund Success");
+        return Response.ok("Cancel Success");
     }
 
 

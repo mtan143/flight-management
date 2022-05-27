@@ -20,17 +20,20 @@ public class FlightItem {
     private String timeDeparture;
     private String timeArrival;
 
-    private int ptPrice;
-    private int ptQuantity;
+    private int stdQuantity;
+    private int stdPrice;
 
-    private int pt_dbPrice;
-    private int pt_dbQuantity;
-
-    private int tgPrice;
-    private int tgQuantity;
-
-    private int hnPrice;
-    private int hnQuantity;
+//    private int ptPrice;
+//    private int ptQuantity;
+//
+//    private int pt_dbPrice;
+//    private int pt_dbQuantity;
+//
+//    private int tgPrice;
+//    private int tgQuantity;
+//
+//    private int hnPrice;
+//    private int hnQuantity;
 
 
 

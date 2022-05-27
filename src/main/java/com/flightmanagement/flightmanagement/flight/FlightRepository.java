@@ -27,7 +27,8 @@ public interface FlightRepository extends CrudRepository<Flight, Integer> {
         "and a.destination=:destination " +
         "and c.classType=:classType " +
         "and c.remainingQuantity>:quantity " +
-        "and a.departure=:departure")
+        "and a.departure=:departure " +
+        "and a.flightStatus='Khoi_Tao'")
     List<SearchObject> searchFlight(@Param("departurePlace") String departurePlace,
                                     @Param("destination") String destination,
                                     @Param("quantity") int quantity,

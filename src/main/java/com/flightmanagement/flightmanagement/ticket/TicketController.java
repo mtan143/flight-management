@@ -71,4 +71,10 @@ public class TicketController {
     public Response getDepartureByTicketId(@PathVariable Integer ticketId) {
         return Response.ok(ticketService.getDepartureByTicketId(ticketId));
     }
+
+    @GetMapping("/email")
+    public Response sendEmail() {
+        ticketService.sendEmail("CDVN00050024");
+        return Response.ok();
+    }
 }
