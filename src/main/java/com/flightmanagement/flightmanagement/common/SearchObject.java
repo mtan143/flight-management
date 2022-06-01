@@ -22,15 +22,4 @@ public class SearchObject {
     private String gate_id;
     private int price;
 
-//    private Integer flightId;
-//    private String flightCode;
-//    private String flightName;
-//    private String airlineName;
-//    private FlightStatus flightStatus;
-//    private String departure;
-//    private int time;
-//    private String timeDeparture;
-//    private String timeArrival;
-//    private String gateId;
-//    private int price;
 }

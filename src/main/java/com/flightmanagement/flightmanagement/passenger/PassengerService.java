@@ -121,7 +121,7 @@ public class PassengerService {
                 + existingPassenger.getFirstName() + " " + existingPassenger.getLastName());
     }
 
-    public List<Passenger> getPassengersByTicketCode(String ticketCode) {
+    public List<PassengerItem> getPassengersByTicketCode(String ticketCode) {
         return passengerRepository.getPassengersByTicketCode(ticketCode);
     }
 }
