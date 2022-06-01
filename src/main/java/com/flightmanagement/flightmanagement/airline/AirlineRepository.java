@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AirlineRepository extends CrudRepository<Airline, Integer> {
 
-    @Query("select * from tbl_Airline where airlineCode=:airlineCode")
-    Airline findBy(@Param("airlineCode") String airlineCode);
+    @Query("select airlineId from tbl_Airline where airlineCode=:airlineCode")
+    Integer findBy(@Param("airlineCode") String airlineCode);
 }

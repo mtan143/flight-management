@@ -10,7 +10,7 @@ import java.util.Date;
 public class FlightItem {
 
     private String name;
-    private int airlineId;
+    private String airlineCode;
     private Date departure;
     private String departurePlace;
     private String destination;

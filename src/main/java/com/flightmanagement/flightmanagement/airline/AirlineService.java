@@ -29,18 +29,18 @@ public class AirlineService {
     }
 
     /**
-     * Get airline by code
+     * Get airline Id by code
      * @param airlineCode
      */
-    public Response findByCode(String airlineCode) {
+    public Integer findByCode(String airlineCode) {
 
         log.info("Execute getByCode method from Airline Service");
         if (airlineCode.isEmpty()) throw new BusinessException(AirlineError.AIRLINE_CODE_INVALID);
 
-        Airline result = airlineRepository.findBy(airlineCode);
+        Integer result = airlineRepository.findBy(airlineCode);
+        if (result == null) throw new BusinessException(AirlineError.AIRLINE_NOT_EXIST);
 
-        return result != null ? Response.ok(result)
-                : Response.failed(new BusinessException(AirlineError.AIRLINE_NOT_EXIST));
+        return result;
     }
 
     /**

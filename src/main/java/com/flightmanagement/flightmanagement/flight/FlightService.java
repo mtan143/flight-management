@@ -1,5 +1,6 @@
 package com.flightmanagement.flightmanagement.flight;
 
+import com.flightmanagement.flightmanagement.airline.AirlineService;
 import com.flightmanagement.flightmanagement.common.Response;
 import com.flightmanagement.flightmanagement.common.SearchObject;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
@@ -24,6 +25,9 @@ public class FlightService {
 
     @Autowired
     private ClassFlightRepository classFlightRepository;
+
+    @Autowired
+    private AirlineService airlineService;
 
     /**
      * Get all flight data of specify airline from database
@@ -199,7 +203,7 @@ public class FlightService {
     /**
      * Create new Flight Item
      * @param name
-     * @param airlineId
+     * @param airlineCode
      * @param departure
      * @param departurePlace
      * @param destination
@@ -218,13 +222,13 @@ public class FlightService {
      * @return
      * @throws ParseException
      */
-    public Response create(String name, int airlineId, String departure, String departurePlace,
+    public Response create(String name, String airlineCode, String departure, String departurePlace,
                            String destination, int time, String gateId, String timeDeparture,
                            String timeArrival, int ptPrice, int ptQuantity, int pt_dbPrice,
                            int pt_dbQuantity, int tgPrice, int tgQuantity, int hnPrice, int hnQuantity)
             throws ParseException {
 
-
+        Integer airlineId = airlineService.findByCode(airlineCode);
 
         Flight flight = new Flight("newFlight", name, airlineId, FlightStatus.Khoi_Tao,
                 new SimpleDateFormat("yyyy-MM-dd").parse(departure),

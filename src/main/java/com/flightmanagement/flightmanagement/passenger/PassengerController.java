@@ -37,4 +37,9 @@ public class PassengerController {
     public Response delete(@PathVariable Integer id) {
         return passengerService.delete(id);
     }
+
+    @GetMapping("/tickets")
+    public Response getPassengersByTicketCode(@RequestHeader String ticketCode) {
+        return Response.ok(passengerService.getPassengersByTicketCode(ticketCode));
+    }
 }

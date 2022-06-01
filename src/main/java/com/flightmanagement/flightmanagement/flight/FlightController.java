@@ -73,7 +73,7 @@ public class FlightController {
         int stdQ = flightItem.getStdQuantity();
         int stdP = flightItem.getStdPrice();
         return flightService.create(flightItem.getName(),
-                flightItem.getAirlineId(), new SimpleDateFormat("yyyy-MM-dd").format(flightItem.getDeparture()), flightItem.getDeparturePlace(),
+                flightItem.getAirlineCode(), new SimpleDateFormat("yyyy-MM-dd").format(flightItem.getDeparture()), flightItem.getDeparturePlace(),
                 flightItem.getDestination(), flightItem.getTime(), flightItem.getGateId(),
                 flightItem.getTimeDeparture(), flightItem.getTimeArrival(),
                 stdP, stdQ + 150,

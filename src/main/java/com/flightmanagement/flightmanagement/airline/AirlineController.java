@@ -20,10 +20,10 @@ public class AirlineController {
         return airlineService.getAll();
     }
 
-    @GetMapping("/find")
-    public Response findByCode(@RequestParam String airlineCode) {
-        return airlineService.findByCode(airlineCode);
-    }
+//    @GetMapping("/find")
+//    public Response findByCode(@RequestParam String airlineCode) {
+//        return airlineService.findByCode(airlineCode);
+//    }
 
     @PostMapping
     public Response save(@RequestBody Airline airline) throws ParseException {

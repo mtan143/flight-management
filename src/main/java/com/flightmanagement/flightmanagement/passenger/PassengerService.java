@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import static com.flightmanagement.flightmanagement.passenger.Status.ACTIVE;
@@ -120,4 +121,7 @@ public class PassengerService {
                 + existingPassenger.getFirstName() + " " + existingPassenger.getLastName());
     }
 
+    public List<Passenger> getPassengersByTicketCode(String ticketCode) {
+        return passengerRepository.getPassengersByTicketCode(ticketCode);
+    }
 }
