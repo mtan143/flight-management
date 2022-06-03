@@ -11,6 +11,7 @@ import com.flightmanagement.flightmanagement.flight.classtype.ClassFlightService
 import com.flightmanagement.flightmanagement.mail.MailService;
 import com.flightmanagement.flightmanagement.passenger.Passenger;
 import com.flightmanagement.flightmanagement.passenger.PassengerRepository;
+import com.flightmanagement.flightmanagement.passenger.PassengerService;
 import com.flightmanagement.flightmanagement.passenger.PassengerValidator;
 import com.flightmanagement.flightmanagement.payment.PaymentError;
 import com.flightmanagement.flightmanagement.payment.PaymentService;
@@ -25,6 +26,7 @@ import javax.mail.MessagingException;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.flightmanagement.flightmanagement.ticket.Status.ACTIVE;
 import static com.flightmanagement.flightmanagement.ticket.Status.DISABLED;
@@ -52,6 +54,9 @@ public class TicketService {
 
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private PassengerService passengerService;
 
     /**
      * Get all ticket data from database
@@ -274,8 +279,14 @@ public class TicketService {
     }
 
 
-    public List<Ticket> findByUserId(String userId) {
-        return ticketRepository.findByUserId(userId);
+    public List<TicketResponse> findByUserId(String userId) {
+
+        List<TicketResponse> res = new ArrayList<>();
+        List<Ticket> tickets = ticketRepository.findByUserId(userId);
+        tickets.forEach(ticket -> res.add(new TicketResponse(ticket,
+                passengerService.getPassengersByTicketCode(ticket.getTicketCode()),
+                this.getDepartureByTicketId(ticket.getTicketId()))));
+        return res;
     }
 
     public Date getDepartureByTicketId(Integer ticketId) {
