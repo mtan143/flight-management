@@ -106,4 +106,9 @@ public class FlightController {
     public Response statisticFlightByClassType(@PathVariable String airlineCode) {
         return flightService.statisticFlightByClassType(airlineCode);
     }
+
+    @GetMapping("/total/{airlineCode}")
+    public Response totalFlightByAirlineCode(@PathVariable String airlineCode) {
+        return Response.ok(flightService.totalFlightByAirlineCode(airlineCode));
+    }
 }

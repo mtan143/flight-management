@@ -456,4 +456,22 @@ public class TicketService {
 
         return response;
     }
+
+    /**
+     * Total ticket of given airline
+     * @param airlineCode
+     * @return
+     */
+    public int totalTicketByAirlineCode(String airlineCode) {
+        return ticketRepository.totalTicketByAirlineCode(airlineCode);
+    }
+
+    /**
+     * Total price of given airline
+     * @param airlineCode
+     * @return
+     */
+    public int totalPriceByAirlineCode(String airlineCode) {
+        return ticketRepository.totalPriceByAirlineCode(airlineCode);
+    }
 }

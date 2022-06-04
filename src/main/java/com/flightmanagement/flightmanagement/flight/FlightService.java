@@ -507,4 +507,13 @@ public class FlightService {
     public Flight getFlightByTicketCode(String ticketCode) {
         return flightRepository.getFlightByTicketCode(ticketCode);
     }
+
+    /**
+     * Total count flight of given airline
+     * @param airlineCode
+     * @return
+     */
+    public int totalFlightByAirlineCode(String airlineCode) {
+        return flightRepository.totalFlightByAirlineCode(airlineCode);
+    }
 }
