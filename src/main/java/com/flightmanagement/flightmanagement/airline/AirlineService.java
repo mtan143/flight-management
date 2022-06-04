@@ -2,6 +2,8 @@ package com.flightmanagement.flightmanagement.airline;
 
 import com.flightmanagement.flightmanagement.common.Response;
 import com.flightmanagement.flightmanagement.exception.BusinessException;
+import com.flightmanagement.flightmanagement.flight.FlightService;
+import com.flightmanagement.flightmanagement.ticket.TicketService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,12 @@ public class AirlineService {
 
     @Autowired
     private AirlineRepository airlineRepository;
+
+    @Autowired
+    private FlightService flightService;
+
+    @Autowired
+    TicketService ticketService;
 
     /**
      * Get all airline data from database
@@ -141,6 +149,19 @@ public class AirlineService {
 
     public String findByAirlineId(Integer airlineId) {
         return airlineRepository.findByAirlineId(airlineId);
+    }
+
+    /**
+     * Total statistic for given airline
+     * @param airlineCode
+     * @return
+     */
+    public Statistic totalStatistic(String airlineCode) {
+
+        return new Statistic(flightService.totalFlightByAirlineCode(airlineCode),
+                            ticketService.totalTicketByAirlineCode(airlineCode),
+                            ticketService.totalPriceByAirlineCode(airlineCode));
+
     }
 
 }
