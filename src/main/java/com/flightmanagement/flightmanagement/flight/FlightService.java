@@ -499,4 +499,12 @@ public class FlightService {
                 .comparing(x -> Integer.parseInt(x.get("year")))).collect(Collectors.toList()));
     }
 
+    /**
+     * Get flight object of given ticket
+     * @param ticketCode
+     * @return
+     */
+    public Flight getFlightByTicketCode(String ticketCode) {
+        return flightRepository.getFlightByTicketCode(ticketCode);
+    }
 }

@@ -18,7 +18,10 @@ public enum TicketError implements BaseError {
     EMAIL_INVALID("EMAIL_INVALID", "Email is required!"),
     PRICE_INVALID("PRICE_INVALID", "Price is invalid!"),
     CHARGE_NOT_EXIST("CHARGE_NOT_EXIST", "Ticket was not check out"),
-    TICKET_NOT_EXIST("TICKET_NOT_EXIST", "Ticket is not existing");
+    TICKET_NOT_EXIST("TICKET_NOT_EXIST", "Ticket is not existing"),
+    TRANSACTION_FAILED("TRANSACTION_FAILED", "Got a problem with your transaction, check it again!"),
+    PARTNER_ID_NOT_FOUND("PARTNER_ID_NOT_FOUND", "Partner ID not found to match with airline"),
+    REFUND_FAILED("REFUND_FAILED", "Got a problem with your refund request, try it later!");
 
     private String code;
     private String message;

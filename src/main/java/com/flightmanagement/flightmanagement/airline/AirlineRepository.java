@@ -10,4 +10,7 @@ public interface AirlineRepository extends CrudRepository<Airline, Integer> {
 
     @Query("select airlineId from tbl_Airline where airlineCode=:airlineCode")
     Integer findBy(@Param("airlineCode") String airlineCode);
+
+    @Query("select a.airlineCode from tbl_Airline as a where a.airlineId=:airlineId")
+    String findByAirlineId(Integer airlineId);
 }

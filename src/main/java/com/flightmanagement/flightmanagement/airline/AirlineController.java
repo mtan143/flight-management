@@ -46,5 +46,10 @@ public class AirlineController {
         return airlineService.get(id);
     }
 
+    @GetMapping("/find/{airlineId}")
+    public Response findByAirlineId(@PathVariable Integer airlineId){
+        return Response.ok(airlineService.findByAirlineId(airlineId));
+    }
+
 
 }

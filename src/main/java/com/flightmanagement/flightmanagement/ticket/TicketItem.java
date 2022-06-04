@@ -34,4 +34,6 @@ public class TicketItem {
     private String chargeId;
 
     private List<Passenger> passengers;
+
+    private String token;
 }

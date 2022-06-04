@@ -58,5 +58,11 @@ public interface FlightRepository extends CrudRepository<Flight, Integer> {
             "where a.airlineCode=:airlineCode")
     List<Flight> getFlightByAirlineCode(String airlineCode);
 
+    @Query("select f.* " +
+            "from tbl_Flight as f " +
+            "join tbl_ClassType as c on f.flightId=c.flightId " +
+            "join tbl_Ticket as t on t.classFlightId=c.classFlightId " +
+            "where t.ticketCode=:ticketCode")
+    Flight getFlightByTicketCode(String ticketCode);
 
 }

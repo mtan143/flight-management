@@ -6,6 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AccountRepository extends CrudRepository<Account, Integer> {
 
@@ -14,5 +16,9 @@ public interface AccountRepository extends CrudRepository<Account, Integer> {
             "where a.partnerId=:partnerId")
     Account findAccountByPartnerId(String partnerId);
 
+    @Query("select top 1 partnerId " +
+            "from tbl_Account " +
+            "where tbl_Account.airlineCode=:airlineCode")
+    String getPartnerIdByAirlineCode(String airlineCode);
 
 }

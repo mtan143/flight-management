@@ -138,4 +138,9 @@ public class AirlineService {
         return Response.ok(airline);
     }
 
+
+    public String findByAirlineId(Integer airlineId) {
+        return airlineRepository.findByAirlineId(airlineId);
+    }
+
 }

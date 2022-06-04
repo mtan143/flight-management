@@ -46,4 +46,8 @@ public class AccountService {
 
         return Response.ok(account);
     }
+
+    public String getPartnerIdByAirlineCode(String airlineCode) {
+        return accountRepository.getPartnerIdByAirlineCode(airlineCode);
+    }
 }

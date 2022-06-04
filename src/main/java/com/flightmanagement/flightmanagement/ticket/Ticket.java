@@ -96,6 +96,9 @@ public class Ticket implements Persistable {
     @Column("lastUpdateDate")
     private Date lastUpdateDate;
 
+    @Column("transactionId")
+    private String transactionId;
+
     @Transient
     @JsonIgnore
     private boolean newEntity;

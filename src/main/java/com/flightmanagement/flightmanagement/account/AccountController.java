@@ -22,4 +22,8 @@ public class AccountController {
     public Response findByPartnerId(@PathVariable String partnerId) {
         return accountService.findByPartnerId(partnerId);
     }
+    @GetMapping("/partner/{airlineCode}")
+    public Response getPartnerIdByAirlineCode(@PathVariable String airlineCode) {
+        return Response.ok(accountService.getPartnerIdByAirlineCode(airlineCode));
+    }
 }

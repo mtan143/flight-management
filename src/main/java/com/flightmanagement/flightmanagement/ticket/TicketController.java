@@ -2,6 +2,8 @@ package com.flightmanagement.flightmanagement.ticket;
 
 import com.flightmanagement.flightmanagement.common.Response;
 import com.stripe.exception.StripeException;
+import lombok.SneakyThrows;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,10 +54,9 @@ public class TicketController {
     }
 
     @PostMapping("/create")
-    public Response create(@RequestBody TicketItem item) {
+    public Response create(@RequestBody TicketItem item) throws JSONException {
         return ticketService.create(item);
     }
-
 
     @GetMapping("/transaction")
     public Response transactionHistory(@RequestParam String userId) {
@@ -63,8 +64,8 @@ public class TicketController {
     }
 
     @GetMapping("/cancel/{ticketId}")
-    public Response cancelTicket(@PathVariable Integer ticketId) throws StripeException {
-        return ticketService.cancelTicket(ticketId);
+    public Response cancelTicket(@PathVariable Integer ticketId, @RequestHeader String token) throws StripeException {
+        return ticketService.cancelTicket(ticketId, token);
     }
 
     @GetMapping("/departure/{ticketId}")
@@ -72,14 +73,14 @@ public class TicketController {
         return Response.ok(ticketService.getDepartureByTicketId(ticketId));
     }
 
-//    @GetMapping("/email")
-//    public Response sendEmail() {
-//        ticketService.sendEmail("CDVN00050024");
-//        return Response.ok();
-//    }
-
     @GetMapping("/transaction-partner/{airlineCode}")
     public Response getTicketByAirlineCode(@PathVariable String airlineCode) {
         return Response.ok(ticketService.getTicketByAirlineCode(airlineCode));
     }
+
+//    @SneakyThrows
+//    @GetMapping("/checkTransaction")
+//    public Response checkTransaction() {
+//        return Response.ok(ticketService.checkTransaction());
+//    }
 }
