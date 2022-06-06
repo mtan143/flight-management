@@ -51,10 +51,6 @@ public class AirlineController {
         return Response.ok(airlineService.findByAirlineId(airlineId));
     }
 
-    @GetMapping("/total/{airlineCode}")
-    public Response totalStatistic(@PathVariable String airlineCode) {
-        return Response.ok(airlineService.totalStatistic(airlineCode));
-    }
 
 
 }

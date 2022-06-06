@@ -26,4 +26,8 @@ public class AccountController {
     public Response getPartnerIdByAirlineCode(@PathVariable String airlineCode) {
         return Response.ok(accountService.getPartnerIdByAirlineCode(airlineCode));
     }
+    @GetMapping("/total/{airlineCode}")
+    public Response totalStatistic(@PathVariable String airlineCode) {
+        return Response.ok(accountService.totalStatistic(airlineCode));
+    }
 }

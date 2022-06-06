@@ -7,7 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class Statistic {
 
-    private int totalFlight;
-    private int totalTicket;
-    private int totalPrice;
+    private Integer totalFlight = 0;
+    private Integer totalTicket = 0;
+    private Integer totalPrice = 0;
+
 }

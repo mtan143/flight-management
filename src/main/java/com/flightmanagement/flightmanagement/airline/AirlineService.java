@@ -22,9 +22,6 @@ public class AirlineService {
     private AirlineRepository airlineRepository;
 
     @Autowired
-    private FlightService flightService;
-
-    @Autowired
     TicketService ticketService;
 
     /**
@@ -151,17 +148,6 @@ public class AirlineService {
         return airlineRepository.findByAirlineId(airlineId);
     }
 
-    /**
-     * Total statistic for given airline
-     * @param airlineCode
-     * @return
-     */
-    public Statistic totalStatistic(String airlineCode) {
 
-        return new Statistic(flightService.totalFlightByAirlineCode(airlineCode),
-                            ticketService.totalTicketByAirlineCode(airlineCode),
-                            ticketService.totalPriceByAirlineCode(airlineCode));
-
-    }
 
 }

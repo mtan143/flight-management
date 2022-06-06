@@ -69,5 +69,5 @@ public interface FlightRepository extends CrudRepository<Flight, Integer> {
             "from tbl_Flight as f " +
             "join tbl_Airline as a on a.airlineId=f.airlineId " +
             "where a.airlineCode=:airlineCode")
-    int totalFlightByAirlineCode(String airlineCode);
+    Integer totalFlightByAirlineCode(String airlineCode);
 }

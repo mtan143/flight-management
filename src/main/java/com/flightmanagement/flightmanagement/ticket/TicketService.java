@@ -462,7 +462,7 @@ public class TicketService {
      * @param airlineCode
      * @return
      */
-    public int totalTicketByAirlineCode(String airlineCode) {
+    public Integer totalTicketByAirlineCode(String airlineCode) {
         return ticketRepository.totalTicketByAirlineCode(airlineCode);
     }
 
@@ -471,7 +471,7 @@ public class TicketService {
      * @param airlineCode
      * @return
      */
-    public int totalPriceByAirlineCode(String airlineCode) {
+    public Integer totalPriceByAirlineCode(String airlineCode) {
         return ticketRepository.totalPriceByAirlineCode(airlineCode);
     }
 }

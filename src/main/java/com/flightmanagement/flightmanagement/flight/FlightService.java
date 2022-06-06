@@ -513,7 +513,7 @@ public class FlightService {
      * @param airlineCode
      * @return
      */
-    public int totalFlightByAirlineCode(String airlineCode) {
+    public Integer totalFlightByAirlineCode(String airlineCode) {
         return flightRepository.totalFlightByAirlineCode(airlineCode);
     }
 }

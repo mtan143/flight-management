@@ -92,8 +92,8 @@ public interface TicketRepository extends CrudRepository<Ticket, Integer> {
             "join tbl_ClassType as c on c.classFlightId=t.classFlightId " +
             "join tbl_Flight as f on c.flightId=f.flightId " +
             "join tbl_Airline as a on f.airlineId=a.airlineId " +
-            "where a.airlineCode=:airlineCode")
-    int totalTicketByAirlineCode(String airlineCode);
+            "where a.airlineCode=:airlineCode and t.ticketStatus='Da_Dung'")
+    Integer totalTicketByAirlineCode(String airlineCode);
 
     @Query("select sum(t.totalPrice) " +
             "from tbl_Ticket as t " +
@@ -101,5 +101,5 @@ public interface TicketRepository extends CrudRepository<Ticket, Integer> {
             "join tbl_Flight as f on c.flightId=f.flightId " +
             "join tbl_Airline as a on f.airlineId=a.airlineId " +
             "where a.airlineCode=:airlineCode and t.ticketStatus='Da_Dung'")
-    int totalPriceByAirlineCode(String airlineCode);
+    Integer totalPriceByAirlineCode(String airlineCode);
 }

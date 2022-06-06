@@ -84,13 +84,4 @@ public class TicketController {
 //        return Response.ok(ticketService.checkTransaction());
 //    }
 
-    @GetMapping("/total/ticket/{airlineCode}")
-    public Response totalTicketByAirlineCode(@PathVariable String airlineCode) {
-        return Response.ok(ticketService.getTicketByAirlineCode(airlineCode));
-    }
-
-    @GetMapping("/total/price/{airlineCode}")
-    public Response totalPriceByAirlineCode(@PathVariable String airlineCode) {
-        return Response.ok(ticketService.totalPriceByAirlineCode(airlineCode));
-    }
 }
